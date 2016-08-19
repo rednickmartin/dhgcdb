@@ -327,6 +327,7 @@
     <Content Include="Views\Review\Edit.cshtml" />
     <Content Include="Views\Review\Index.cshtml" />
     <Content Include="Views\Review\CreatePersonReview.cshtml" />
+    <Content Include="Views\Review\EditPersonReview.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

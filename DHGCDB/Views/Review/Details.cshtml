@@ -59,14 +59,6 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.GrowthIndividual)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.GrowthIndividual)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.NumberOfFunds)
         </dt>
 
@@ -75,8 +67,89 @@
         </dd>
 
     </dl>
+
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    </p>
+
+
+    <hr />
+
+    <h4>Review - Individuals</h4>
+    <hr />
+
+    @foreach(var indivReview in Model.IndividualReviews) {
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(rev => indivReview.PersonName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(rev => indivReview.PersonName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(rev => indivReview.PensionAttitudeToRiskDisplay)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(rev => indivReview.PensionAttitudeToRiskDisplay)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(rev => indivReview.PensionFundSelectionDisplay )
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(rev => indivReview.PensionFundSelectionDisplay)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(rev => indivReview.InvestmentAttitudeToRiskDisplay)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(rev => indivReview.InvestmentAttitudeToRiskDisplay)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(rev => indivReview.InvestmentFundSelectionDisplay)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(rev => indivReview.InvestmentFundSelectionDisplay)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(rev => indivReview.YearOfRiskScore )
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(rev => indivReview.YearOfRiskScore )
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(rev => indivReview.RiskChanged )
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(rev => indivReview.RiskChanged)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(rev => indivReview.AboveOrBelowOutput )
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(rev => indivReview.AboveOrBelowOutput)
+        </dd>
+
+    </dl>
+    @Html.ActionLink("Edit", "EditPersonReview", "Review", new { ID = indivReview.ID }, new { })
+    }
+
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
     @Html.ActionLink("Back to Client", "Details", "Client", new { ID = Model.ClientID }, new { } )
 </p>

@@ -10,7 +10,9 @@ namespace DHGCDB.ViewModels
 {
   public class ReviewForView
   {
-    public ReviewForView() { }
+    public ReviewForView() {
+      IndividualReviews = new List<PersonReviewForView>();
+    }
 
     public ReviewForView(Review review)
     {
@@ -21,8 +23,8 @@ namespace DHGCDB.ViewModels
       IsJoint = review.IsJoint;
       PortfolioSize = review.PortfolioSize;
       AnnualCharges = review.AnnualCharges;
-      GrowthIndividual = review.GrowthIndividual;
       NumberOfFunds = review.NumberOfFunds;
+      IndividualReviews = new List<PersonReviewForView>();
     }
 
     public Review Review {
@@ -35,7 +37,6 @@ namespace DHGCDB.ViewModels
           IsJoint = IsJoint,
           PortfolioSize = PortfolioSize,
           AnnualCharges = AnnualCharges,
-          GrowthIndividual = GrowthIndividual,
           NumberOfFunds = NumberOfFunds
         };
       }
@@ -59,8 +60,6 @@ namespace DHGCDB.ViewModels
 
     public int AnnualCharges { get; set; }
 
-    public bool GrowthIndividual { get; set; }
-
     public int NumberOfFunds { get; set; }
 
     public int HowConducted { get; set; }
@@ -76,5 +75,7 @@ namespace DHGCDB.ViewModels
     public SelectList KIIDsGivenList { get; set; }
 
     public int? ClientID { get; set; }
+
+    public ICollection<PersonReviewForView> IndividualReviews { get; set; }
   }
 }

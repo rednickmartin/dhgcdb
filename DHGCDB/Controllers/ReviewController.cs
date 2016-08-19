@@ -72,6 +72,18 @@ namespace DHGCDB.Views
       ReviewForView reviewForView = new ReviewForView(review);
       reviewForView.ClientID = client.ID;
 
+      foreach(var personReviewID in db.PersonReviews.Where(pr => pr.Review.ID == id).Select(pr => pr.ID).ToList()) {
+        var personReview = db.PersonReviews.Find(personReviewID);
+        var personReviewForView = new PersonReviewForView(personReview);
+        personReviewForView.PersonName = personReview.Person.ToString();
+
+        personReviewForView.PensionAttitudeToRiskDisplay = personReview.PensionAttitudeToRisk.Name;
+        personReviewForView.PensionFundSelectionDisplay = personReview.PensionFundSelection.Name;
+        personReviewForView.InvestmentAttitudeToRiskDisplay = personReview.InvestmentAttitudeToRisk.Name;
+        personReviewForView.InvestmentFundSelectionDisplay = personReview.InvestmentFundSelection.Name;
+        reviewForView.IndividualReviews.Add(personReviewForView);
+      }
+
       return View(reviewForView);
     }
 
@@ -89,7 +101,7 @@ namespace DHGCDB.Views
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Create(int? id, [Bind(Include = "ID,Name,ReviewDate,ValuationDate,IsJoint,PortfolioSize,AnnualCharges,GrowthIndividual,NumberOfFunds,HowConducted,ReviewType,KIIDsGiven")] ReviewForView reviewForView)
+    public ActionResult Create(int? id, [Bind(Include = "ID,Name,ReviewDate,ValuationDate,IsJoint,PortfolioSize,AnnualCharges,NumberOfFunds,HowConducted,ReviewType,KIIDsGiven")] ReviewForView reviewForView)
     {
       if(id == null) {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -115,7 +127,7 @@ namespace DHGCDB.Views
         db.SaveChanges();
 
         var firstPersonID = client.Persons.First().ID;
-        return RedirectToAction("CreatePersonReview", "Review", new { ID = client.ID, subID = firstPersonID });
+        return RedirectToAction("CreatePersonReview", "Review", new { ID = review.ID, subID = firstPersonID });
       }
 
       return View(reviewForView);
@@ -139,7 +151,7 @@ namespace DHGCDB.Views
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit([Bind(Include = "ID,Name,ReviewDate,ValuationDate,IsJoint,PortfolioSize,AnnualCharges,GrowthIndividual,NumberOfFunds")] ReviewForView reviewForView)
+    public ActionResult Edit([Bind(Include = "ID,Name,ReviewDate,ValuationDate,IsJoint,PortfolioSize,AnnualCharges,NumberOfFunds")] ReviewForView reviewForView)
     {
       if(ModelState.IsValid) {
         Review review = reviewForView.Review;
@@ -174,6 +186,10 @@ namespace DHGCDB.Views
       Review review = db.Reviews.Find(id);
       Client client = review.Client;
 
+      foreach(var personReview in db.PersonReviews.Where(pr => pr.Review.ID == id)) {
+        db.PersonReviews.Remove(personReview);
+      }
+
       db.Reviews.Remove(review);
       db.SaveChanges();
       return RedirectToAction("Details", "Client", new { ID = client.ID });
@@ -190,7 +206,7 @@ namespace DHGCDB.Views
       }
       ViewBag.AttitudeToRiskList = GetAttitudeToRiskList();
       ViewBag.FundSelectionList = GetFundSelectionList();
-      ViewBag.RiskChangedLust = GetRiskChangedList();
+      ViewBag.RiskChangedList = GetRiskChangedList();
       ViewBag.AboveOrBelowOutputList = GetAboveOrBelowOutputList();
 
       Review review = db.Reviews.Find(id);
@@ -234,12 +250,81 @@ namespace DHGCDB.Views
 
         Client client = review.Client;
 
+        PersonReview personReview = personReviewForView.PersonReview;
+        personReview.Person = person;
+        personReview.Review = review;
+        personReview.PensionAttitudeToRisk = db.AttitudeToRiskSelections.Find(personReviewForView.PensionAttitudeToRisk);
+        personReview.PensionFundSelection = db.FundSelections.Find(personReviewForView.PensionFundSelection);
+        personReview.InvestmentAttitudeToRisk = db.AttitudeToRiskSelections.Find(personReviewForView.InvestmentAttitudeToRisk);
+        personReview.InvestmentFundSelection = db.FundSelections.Find(personReviewForView.InvestmentFundSelection);
+
+        db.PersonReviews.Add(personReview);
+        db.SaveChanges();
+
         foreach(var individual in client.Persons) {
-          db.PersonReviews.Find(new { Person = individual.ID, Review = review.ID });
+          var existingPersonReviews = db.PersonReviews.Where(pr => pr.Person.ID == individual.ID && pr.Review.ID == review.ID);
+          if(existingPersonReviews.Any())
+            continue;
+          else
+            return RedirectToAction("CreatePersonReview", "Review", new { id = review.ID, subid = individual.ID });
         }
 
         return RedirectToAction("Details", "Client", new { ID = client.ID });
 
+      }
+      return View(personReviewForView);
+    }
+
+
+    // GET: Review/EditPersonReview/5
+    public ActionResult EditPersonReview(int? id)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+
+      PersonReview personReview = db.PersonReviews.Find(id);
+      if(personReview == null) {
+        return HttpNotFound();
+      }
+
+      var personReviewForView = new PersonReviewForView(personReview);
+      personReviewForView.ReviewID = personReview.Review.ID;
+      personReviewForView.AttitudeToRiskList = new SelectList(GetAttitudeToRiskList(), "Key", "Value");
+      personReviewForView.FundSelection = new SelectList(GetFundSelectionList(), "Key", "Value");
+      personReviewForView.RiskChangeSelection = new SelectList(GetRiskChangedList(), "Key", "Value");
+      personReviewForView.AboveOrBelowOutputSelection = new SelectList(GetAboveOrBelowOutputList(), "Key", "Value");
+
+      return View(personReviewForView);
+    }
+
+    // POST: Review/EditPersonReview/5
+    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+    // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult EditPersonReview(int? id, [Bind(Include = "ID,InvestmentAttitudeToRisk,InvestmentFundSelection,PensionAttitudeToRisk,PensionFundSelection,YearOfRiskScore,RiskChanged,AboveOrBelowOutput")] PersonReviewForView personReviewForView)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+
+      PersonReview personReview = db.PersonReviews.Find(id);
+      if(personReview == null) {
+        return HttpNotFound();
+      }
+
+      if(ModelState.IsValid) {
+        personReview.InvestmentAttitudeToRisk = db.AttitudeToRiskSelections.Find(personReviewForView.InvestmentAttitudeToRisk);
+        personReview.InvestmentFundSelection = db.FundSelections.Find(personReviewForView.InvestmentFundSelection);
+        personReview.PensionAttitudeToRisk = db.AttitudeToRiskSelections.Find(personReviewForView.PensionAttitudeToRisk);
+        personReview.PensionFundSelection = db.FundSelections.Find(personReviewForView.PensionFundSelection);
+        personReview.ATRYear = personReviewForView.YearOfRiskScore;
+        personReview.ATRChanged = personReviewForView.RiskChanged;
+        personReview.ATROutput = personReviewForView.AboveOrBelowOutput;
+        db.SaveChanges();
+
+        return RedirectToAction("Details", new { ID = personReview.Review.ID });
       }
       return View(personReviewForView);
     }

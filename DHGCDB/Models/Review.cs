@@ -15,6 +15,8 @@ namespace DHGCDB.Models
 
     public string Name { get; set; }
 
+    [DataType(DataType.Date)]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
     public DateTime ReviewDate { get; set; }
 
     public virtual ReviewtHowConducted HowConducted { get; set; }
@@ -26,8 +28,6 @@ namespace DHGCDB.Models
     public int PortfolioSize { get; set; }
 
     public int AnnualCharges { get; set; }
-
-    public bool GrowthIndividual { get; set; }
 
     public virtual KIIDSGiven KIIDSGiven { get; set; }
 

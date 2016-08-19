@@ -85,7 +85,6 @@ namespace DHGCDB.DAL
         IsJoint = true,
         PortfolioSize = 10000,
         AnnualCharges = 100,
-        GrowthIndividual = true,
         KIIDSGiven = KIIDSGivenBeingSent,
         NumberOfFunds = 20,
         ReviewType = revTypeNewCustomer
@@ -100,7 +99,6 @@ namespace DHGCDB.DAL
         IsJoint = true,
         PortfolioSize = 13000,
         AnnualCharges = 100,
-        GrowthIndividual = true,
         KIIDSGiven = KIIDSGivenGiven,
         NumberOfFunds = 23,
         ReviewType = revTypeExistingCustomerReview
