@@ -1,0 +1,64 @@
+﻿@model DHGCDB.ViewModels.FundForView
+
+@{
+    ViewBag.Title = "Fund Details";
+}
+
+<h2>Fund Details</h2>
+
+<div>
+    <h4>@Model.Name </h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description )
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description )
+        </dd>
+    </dl>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID })
+    </p>
+    <hr />
+    <h4>ATR Allocations</h4>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ATRAllocations.FirstOrDefault().AttitudeToRisk.Name )
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ATRAllocations.FirstOrDefault().Percentage )
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach(var atr in Model.ATRAllocations ) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => atr.AttitudeToRisk.Name )
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => atr.Percentage )
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "EditATRAllocation", new { id = atr.ID }) |
+                @Html.ActionLink("Delete", "DeleteATRAllocation", new { id = atr.ID })
+            </td>
+        </tr>
+        }
+     </table>
+     <hr />
+</div>
+<p>
+    @Html.ActionLink("Back to Fund Selection", "Details", new { ID = Model.FundSelectionID } )
+</p>

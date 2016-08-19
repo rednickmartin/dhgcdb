@@ -224,6 +224,7 @@
     <Compile Include="Models\Fund.cs" />
     <Compile Include="Models\FundATRAllocation.cs" />
     <Compile Include="Models\FundSelection.cs" />
+    <Compile Include="Controllers\FundSelectionController.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\InvestmentATR.cs" />
     <Compile Include="Models\KIIDSGiven.cs" />
@@ -234,11 +235,15 @@
     <Compile Include="Models\ReviewHowConducted.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\ReviewType.cs" />
+    <Compile Include="Models\Sector.cs" />
+    <Compile Include="Models\SectorGrouping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\ClientAddress.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
+    <Compile Include="ViewModels\FundForView.cs" />
     <Compile Include="ViewModels\PersonReviewForView.cs" />
+    <Compile Include="ViewModels\FundSelectionForView.cs" />
     <Compile Include="ViewModels\ReviewForView.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -328,6 +333,12 @@
     <Content Include="Views\Review\Index.cshtml" />
     <Content Include="Views\Review\CreatePersonReview.cshtml" />
     <Content Include="Views\Review\EditPersonReview.cshtml" />
+    <Content Include="Views\FundSelection\Create.cshtml" />
+    <Content Include="Views\FundSelection\Delete.cshtml" />
+    <Content Include="Views\FundSelection\Details.cshtml" />
+    <Content Include="Views\FundSelection\Edit.cshtml" />
+    <Content Include="Views\FundSelection\Index.cshtml" />
+    <Content Include="Views\FundSelection\FundDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

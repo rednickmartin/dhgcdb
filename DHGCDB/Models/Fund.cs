@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace DHGCDB.Models
 {
@@ -16,6 +17,9 @@ namespace DHGCDB.Models
 
     public string Name { get; set; }
 
+    public virtual Sector Sector { get; set; }
+
+    [Display(Name = "Market Commentary")]
     public string Description { get; set; }
 
     public virtual FundSelection FundSelection { get; set; }

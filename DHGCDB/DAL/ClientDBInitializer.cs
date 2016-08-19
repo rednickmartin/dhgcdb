@@ -8,6 +8,40 @@ namespace DHGCDB.DAL
 {
   public class ClientDBInitializer : System.Data.Entity.DropCreateDatabaseIfModelChanges<ClientDBContext>
   {
+    private void AddFund(ClientDBContext context,
+      FundSelection fundSelection,
+      String name,
+      Sector sector,
+      AttitudeToRisk atr50,
+      AttitudeToRisk atr60,
+      AttitudeToRisk atr70,
+      AttitudeToRisk atr80,
+      int atr50Perc,
+      int atr60Perc,
+      int atr70Perc,
+      int atr80Perc,
+      string description
+      )
+    {
+      var fund = new Fund { FundSelection = fundSelection, Sector = sector, Name = name, Description = description };
+      fundSelection.Funds.Add(fund);
+      var fundAlloc50 = new FundATRAllocation { Fund = fund, AttitudeToRisk = atr50, Percentage = atr50Perc };
+      var fundAlloc60 = new FundATRAllocation { Fund = fund, AttitudeToRisk = atr60, Percentage = atr60Perc };
+      var fundAlloc70 = new FundATRAllocation { Fund = fund, AttitudeToRisk = atr70, Percentage = atr70Perc };
+      var fundAlloc80 = new FundATRAllocation { Fund = fund, AttitudeToRisk = atr80, Percentage = atr80Perc };
+      fund.Allocations.Add(fundAlloc50);
+      fund.Allocations.Add(fundAlloc60);
+      fund.Allocations.Add(fundAlloc70);
+      fund.Allocations.Add(fundAlloc80);
+
+      context.Funds.Add(fund);
+      context.FundATRAllocations.Add(fundAlloc50);
+      context.FundATRAllocations.Add(fundAlloc60);
+      context.FundATRAllocations.Add(fundAlloc70);
+      context.FundATRAllocations.Add(fundAlloc80);
+    }
+
+
     protected override void Seed(ClientDBContext context)
     {
       var person1 = new Person { Title = "Mr", FirstName = "Nick", Surname = "Martin", Gender = "M", BirthDate = DateTime.Parse("1981-07-01"), IsPrimary = true };
@@ -110,10 +144,63 @@ namespace DHGCDB.DAL
       context.Reviews.Add(review1);
       context.Reviews.Add(review2);
 
-      var fund1 = new Fund { Name = "Invesco Perpetual Corporate Bond", Description = "This is an OBSR GOLD rated fund managed by Paul Read and Paul Causer and is a Citywire Selected fund. Aim of Fund – to achieve a combination of income and capital growth over the medium to long term. The Fund seeks to achieve its objective by investing primarily in investment grade corporate debt securities. Recent Fund performance is – 1yr  5.21%." };
-      var fund2 = new Fund { Name = "Royal London Corporate Bond", Description = "This is an OBSR GOLD rated fund managed by Jonathan Platt and Sajiv Vaid, both rated AAA by the Citywire survey of top fund managers over 3 years and was Winner in the Investment Week Awards 2013 for the Sterling Corporate Bond sector. Aim of Fund – to achieve a combination of mainly income with some capital growth over the medium (5 years) to long term (7 years). Recent Fund performance is – 1yr  4.97%." };
-      var fund3 = new Fund { Name = "M&G Optimal Income", Description = "This is an OBSR SILVER rated fund managed by Richard Woolnough – rated A by the Citywire survey of top fund managers over 3 years and is a Citywire selected fund. Aim of Fund – to provide a total return to investors based on exposure to optimal income streams in investment markets. Recent Fund performance is – 1yr  7.08%, 3yr  29.5%, 5yrs  84.25%." };
-      var fund4 = new Fund { Name = "Templeton Global Total Return Bond", Description = "This is an OBSR BRONZE rated fund managed by Michael Hasenstab and Sonal Desai – rated A by the Citywire survey of top fund managers over 3 years and was a Finalist in the Investment Week Awards 2013 for the Overseas Bonds sector. Aim of Fund – to achieve a total return, over the long term, from a combination of income, capital growth and currency gains. Recent Fund performance is – 1yr       -1.84 %, 3yr  18.69 %, 5yrs  55.58%" };
+      var ukGlobalBonds = new SectorGrouping { Name = "UK & Global Bonds" };
+      var property = new SectorGrouping { Name = "Property" };
+      var ukEquity = new SectorGrouping { Name = "UK Equity" };
+      var globalEquityGroup = new SectorGrouping { Name = "Global Equity" };
+
+      var ukBond = new Sector { Name = "UK Bond" };
+      var globalBond = new Sector { Name = "Global Bond" };
+      var ukRealProperty = new Sector { Name = "UK Real Property" };
+      var globalProperty = new Sector { Name = "Global Property" };
+      var ukEquityIncome = new Sector { Name = "UK Equity (Income)" };
+      var ukEquityGrowth = new Sector { Name = "UK Equity (Growth)" };
+      var ukSpecialist = new Sector { Name = "UK Specialist" };
+      var globalEquity = new Sector { Name = "Global Equity" };
+      var globalSpecialist = new Sector { Name = "Global Specialist" };
+
+      ukBond.SectorGrouping = ukGlobalBonds;
+      globalBond.SectorGrouping = ukGlobalBonds;
+      ukGlobalBonds.Sectors.Add(ukBond);
+      ukGlobalBonds.Sectors.Add(globalBond);
+
+      ukRealProperty.SectorGrouping = property;
+      globalProperty.SectorGrouping = property;
+      property.Sectors.Add(ukRealProperty);
+      property.Sectors.Add(globalProperty);
+
+      ukEquityIncome.SectorGrouping = ukEquity;
+      ukEquityGrowth.SectorGrouping = ukEquity;
+      ukSpecialist.SectorGrouping = ukEquity;
+      ukEquity.Sectors.Add(ukEquityIncome);
+      ukEquity.Sectors.Add(ukEquityGrowth);
+      ukEquity.Sectors.Add(ukSpecialist);
+
+      globalEquity.SectorGrouping = globalEquityGroup;
+      globalSpecialist.SectorGrouping = globalEquityGroup;
+      globalEquityGroup.Sectors.Add(globalEquity);
+      globalEquityGroup.Sectors.Add(globalSpecialist);
+
+      context.SectorGroupings.Add(ukGlobalBonds);
+      context.SectorGroupings.Add(property);
+      context.SectorGroupings.Add(ukEquity);
+      context.SectorGroupings.Add(globalEquityGroup);
+
+      context.Sectors.Add(ukBond);
+      context.Sectors.Add(globalBond);
+      context.Sectors.Add(ukRealProperty);
+      context.Sectors.Add(globalProperty);
+      context.Sectors.Add(ukEquityIncome);
+      context.Sectors.Add(ukEquityGrowth);
+      context.Sectors.Add(ukSpecialist);
+      context.Sectors.Add(globalEquity);
+      context.Sectors.Add(globalSpecialist);
+
+
+      var fund1 = new Fund { Name = "Invesco Perpetual Corporate Bond", Sector = ukBond, Description = "This is an OBSR GOLD rated fund managed by Paul Read and Paul Causer and is a Citywire Selected fund. Aim of Fund – to achieve a combination of income and capital growth over the medium to long term. The Fund seeks to achieve its objective by investing primarily in investment grade corporate debt securities. Recent Fund performance is – 1yr  5.21%." };
+      var fund2 = new Fund { Name = "Royal London Corporate Bond", Sector = ukBond, Description = "This is an OBSR GOLD rated fund managed by Jonathan Platt and Sajiv Vaid, both rated AAA by the Citywire survey of top fund managers over 3 years and was Winner in the Investment Week Awards 2013 for the Sterling Corporate Bond sector. Aim of Fund – to achieve a combination of mainly income with some capital growth over the medium (5 years) to long term (7 years). Recent Fund performance is – 1yr  4.97%." };
+      var fund3 = new Fund { Name = "M&G Optimal Income", Sector = ukBond, Description = "This is an OBSR SILVER rated fund managed by Richard Woolnough – rated A by the Citywire survey of top fund managers over 3 years and is a Citywire selected fund. Aim of Fund – to provide a total return to investors based on exposure to optimal income streams in investment markets. Recent Fund performance is – 1yr  7.08%, 3yr  29.5%, 5yrs  84.25%." };
+      var fund4 = new Fund { Name = "Templeton Global Total Return Bond", Sector = globalBond, Description = "This is an OBSR BRONZE rated fund managed by Michael Hasenstab and Sonal Desai – rated A by the Citywire survey of top fund managers over 3 years and was a Finalist in the Investment Week Awards 2013 for the Overseas Bonds sector. Aim of Fund – to achieve a total return, over the long term, from a combination of income, capital growth and currency gains. Recent Fund performance is – 1yr       -1.84 %, 3yr  18.69 %, 5yrs  55.58%" };
 
       var fund1Allocation1 = new FundATRAllocation { Fund = fund1, AttitudeToRisk = atr50, Percentage = 3 };
       var fund1Allocation2 = new FundATRAllocation { Fund = fund1, AttitudeToRisk = atr60, Percentage = 4 };
@@ -141,14 +228,14 @@ namespace DHGCDB.DAL
 
       var fund4Allocation1 = new FundATRAllocation { Fund = fund4, AttitudeToRisk = atr80, Percentage = 7 };
       var fund4Allocation2 = new FundATRAllocation { Fund = fund4, AttitudeToRisk = atr90, Percentage = 8 };
-       var fund4Allocation3 = new FundATRAllocation { Fund = fund4, AttitudeToRisk = atr100, Percentage = 9 };
+      var fund4Allocation3 = new FundATRAllocation { Fund = fund4, AttitudeToRisk = atr100, Percentage = 9 };
 
       fund4.Allocations.Add(fund4Allocation1);
       fund4.Allocations.Add(fund4Allocation2);
       fund4.Allocations.Add(fund4Allocation3);
 
-      var fundSelection1 = new FundSelection { Name = "Skandia ISA Funds Winter 2014", DateCreated = DateTime.Now };
-      var fundSelection2 = new FundSelection { Name = "Alternative Winter 2014", DateCreated = DateTime.Now };
+      var fundSelection1 = new FundSelection { Name = "Skandia ISA Funds Winter 2014", DateCreated = DateTime.Today, IncludedInInvestmentFundSelections = true, IncludedInPensionFundSelections = true };
+      var fundSelection2 = new FundSelection { Name = "Alternative Winter 2014", DateCreated = DateTime.Today, IncludedInInvestmentFundSelections = true, IncludedInPensionFundSelections = true };
 
       fund1.FundSelection = fundSelection1;
       fund2.FundSelection = fundSelection1;
@@ -182,6 +269,40 @@ namespace DHGCDB.DAL
 
       context.FundSelections.Add(fundSelection1);
       context.FundSelections.Add(fundSelection2);
+
+
+      // Jan2014
+      var skandiaInvestmentBond = new FundSelection { Name = "Skandia ISA Account Jarnuary 2014", DateCreated = DateTime.Today, IncludedInInvestmentFundSelections = true };
+      context.FundSelections.Add(skandiaInvestmentBond);
+      AddFund(context, skandiaInvestmentBond, "Invesco Perpetual Corporate Bond", ukBond, atr50, atr60, atr70, atr80, 3, 3, 2, 1, "This is an OBSR GOLD rated fund managed by Paul Read and Paul Causer and is a Citywire Selected fund. Aim of Fund – to achieve a high level of overall return, with relative security of capital. It intends to invest primarily in fixed interest securities. Recent Fund performance is – 1yr  14.15 %, 3yr  18.69 %, 5yr  34.44%.");
+      AddFund(context, skandiaInvestmentBond, "Royal London Corporate Bond", ukBond, atr50, atr60, atr70, atr80, 3, 2, 1, 1, "This is an OBSR GOLD rated fund managed by Jonathan Platt and Sajiv Vaidand, both rated A by the Citywire survey of top fund managers over 3 years and was Shortlisted in the Investment Week Awards 2012 for the Sterling Corporate Bond sector. Aim of Fund – to achieve a combination of mainly income with some capital growth over the medium (5 years) to long term (7 years). Recent Fund performance is – 1yr  12.65%, 3yr  30.68%, 5yrs  34.07%.");
+      AddFund(context, skandiaInvestmentBond, "M&G Optimal Income", ukBond, atr50, atr60, atr70, atr80, 8, 7, 5, 2, "This is an OBSR SILVER rated fund managed by Richard Woolnough, is a Citywire Selected fund and was Shortlisted in the Investment Week Awards 2012 for the Strategic Bond sector. Aim of Fund – to provide a total return to investors based on exposure to optimal income streams in investment markets. Recent Fund performance is – 1yr  10.75%, 3yr  28.19%, 5yrs  66.28%.");
+      AddFund(context, skandiaInvestmentBond, "Invesco Perpetual Monthly Income Plus", ukBond, atr50, atr60, atr70, atr80, 6, 5, 4, 3, "");
+
+      AddFund(context, skandiaInvestmentBond, "Invesco Perpetual Global Bond", globalBond, atr50, atr60, atr70, atr80, 6, 4, 3, 2, "This is an OBSR BRONZE rated fund managed by Michael Matthews and Stuart Edwards. Aim of Fund – to achieve a good overall investment return in the medium to long term with relative security of capital. The underlying fund intends to invest primarily in international bonds of differing yields and maturities. Recent Fund performance is – 1yr  6.93%, 3yr  18.44%, 5yrs  48.53%.");
+      AddFund(context, skandiaInvestmentBond, "Templeton Global Total Return Bond", globalBond, atr50, atr60, atr70, atr80, 4, 3, 1, 1, "This is an OBSR BRONZE rated fund managed by Michael Hasenstab and Sonal Desai. Aim of Fund – to achieve a total return, over the long term, from a combination of income, capital growth and currency gains. Recent Fund performance is – 1yr  12.23%, 3yr  33.61%.");
+
+      AddFund(context, skandiaInvestmentBond, "Henderson UK Property", ukRealProperty, atr50, atr60, atr70, atr80, 10, 10, 8, 6, "This fund is managed by Marcus Langlands Pearse and Ainslie McLennan. Aim of Fund – to achieve a high income together with some growth of both income and capital through investment primarily in commercial property and property-related assets. Recent Fund performance is – 1yr  5.79%, 3yr  14.20%, 5yrs  -5.63%.");
+      AddFund(context, skandiaInvestmentBond, "Aviva Property Trust", ukRealProperty, atr50, atr60, atr70, atr80, 10, 6, 6, 4, "");
+      AddFund(context, skandiaInvestmentBond, "Aberdeen Propery Share", ukRealProperty, atr50, atr60, atr70, atr80, 3, 3, 4, 6, "");
+
+      AddFund(context, skandiaInvestmentBond, "Invesco Perpetual High Income", ukEquityIncome, atr50, atr60, atr70, atr80, 5, 6, 6, 5, "This is an OBSR GOLD rated fund managed by Neil Woodford- rated A by the Citywire survey of top fund managers over 3 years and is a Citywire selected fund. Aim of Fund – to achieve a high level of income, together with capital growth. The Fund intends to invest primarily in companies listed in the UK, with the balance invested internationally. Recent Fund performance is – 1yr  14.53%, 3yr  38.29%, 5yrs  35.31%.");
+      AddFund(context, skandiaInvestmentBond, "Royal London UK Equity Income", ukEquityIncome, atr50, atr60, atr70, atr80, 5, 4, 5, 5, "");
+
+      AddFund(context, skandiaInvestmentBond, "Cazenove UK Opportunities", ukEquityGrowth, atr50, atr60, atr70, atr80, 8, 10, 12, 15, "This is an OBSR BRONZE rated fund managed by Steve Cordell and Julie Dean - rated AAA by the Citywire survey of top fund managers over 3 years and was Shortlisted in the Investment Week Awards 2012 for the UK Growth sector. Aim of Fund – To achieve an income return, together with long term capital growth, by investing in any economic sector of the UK market. Recent Fund performance is – 1yr   25.69%.");
+      AddFund(context, skandiaInvestmentBond, "AXA Framlington UK Select Opps", ukEquityGrowth, atr50, atr60, atr70, atr80, 6, 8, 9, 12, "This is an OBSR GOLD rated fund managed by Nigel Thomas- rated AAA by the Citywire survey of top fund managers over 3 years, is a Citywire Star Pick fund and was Highly Commended in the Investment Week Awards 2012 for the UK Growth sector. Aim of Fund – to achieve capital growth by investing in companies, primarily of UK origin, where the Manager believes above average returns can be realised. Recent Fund performance is – 1yr  9.71%, 3yr  39.50%, 5yrs  42.52%.");
+
+      AddFund(context, skandiaInvestmentBond, "Cazenove UK Smaller Companies [CLOSED TO N/B]", ukSpecialist, atr50, atr60, atr70, atr80, 1, 1, 2, 1, "This is an OBSR BRONZE rated fund managed by John Warren and Paul Marriage - rated AAA by the Citywire survey of top fund managers over 3 years, is a Citywire selected fund and was Winner of the Investment Week Awards 2012 for the UK Smaller Companies sector. Aim of Fund – To achieve long term capital growth by investing primarily in UK smaller companies. The Fund will invest at least 80 per cent of its assets in the UK listed companies that form the bottom 10 percent by market capitalisation. The Fund may also invest in companies which are headquartered or have significant activities in the UK which are quoted on a stock exchange outside the UK. Recent Fund performance is – 1yr   34.23%, 3yr  90.98%, 5yrs  98.14%.");
+      AddFund(context, skandiaInvestmentBond, "Liontrust UK Smaller Companies", ukSpecialist, atr50, atr60, atr70, atr80, 2, 2, 2, 3, "This is an OBSR BRONZE rated fund managed by Julian Fosh and Anthony Cross – both rated AAA by the Citywire survey of top fund managers over 3 years. Aim of Fund – to provide long-term capital growth by investing primarily in smaller UK companies displaying a high degree of Intellectual Capital and employee motivation through equity ownership in their business model. Recent Fund performance is – 1yr  22.53%, 3yr  54.03%, 5yrs  75.07%.");
+
+      AddFund(context, skandiaInvestmentBond, "Artemis Global Growth", globalEquity, atr50, atr60, atr70, atr80, 7, 7, 8, 8, "");
+      AddFund(context, skandiaInvestmentBond, "M&G Global Dividend", globalEquity, atr50, atr60, atr70, atr80, 5, 6, 7, 7, "This is an OBSR SILVER rated fund managed by Stuart Rhodes - rated A by the Citywire survey of top fund managers over 3 years and was Winner of the Investment Week Awards 2012 for the Global Equity & Income sector. Aim of Fund – to deliver a dividend yield above the market average, by investing mainly in a range of global equities. The Fund aims to grow distributions over the long term whilst also maximising total return (the combination of income and growth of capital). Recent Fund performance is – 1yr  12.06%, 3yr  34.30%, 4yrs  65.71%.");
+      AddFund(context, skandiaInvestmentBond, "Invesco Perpetual Global Equity Income", globalEquity, atr50, atr60, atr70, atr80, 3, 5, 4, 5, "This fund is managed by Doug McGraw and Paul Boyne - rated AA by the Citywire survey of top fund managers over 3 years. Aim of Fund – to generate a rising level of income, together with long-term capital growth, investing primarily in global equities. Recent Fund performance is – 1yr  12.99%, 3yr  36.82%.");
+      AddFund(context, skandiaInvestmentBond, "Newton Global Higher Income", globalEquity, atr50, atr60, atr70, atr80, 2, 2, 3, 3, "This is an OBSR SILVER rated fund managed by James Harries and Nick Clay and is a Citywire selected fund. Aim of Fund –to achieve increasing income and capital growth over the long term by investing in shares (i.e. equities) and similar investments of companies listed or located throughout the world. Recent Fund performance is – 1yr  13.27%, 3yr  32.98%, 5yrs  38.68%.");
+
+      AddFund(context, skandiaInvestmentBond, "Old Mutual North American Equity", globalSpecialist, atr50, atr60, atr70, atr80, 2, 3, 3, 4, "");
+      AddFund(context, skandiaInvestmentBond, "Jupiter European", globalSpecialist, atr50, atr60, atr70, atr80, 1, 1, 2, 2, "");
+      AddFund(context, skandiaInvestmentBond, "First State Global Listed Infrastructure", globalSpecialist, atr50, atr60, atr70, atr80, 2, 2, 3, 4, "This is an OBSR SILVER rated fund managed by Andrew Greenup and Peter Meany, rated A by the Citywire survey of top fund managers over 3 years and is a Citywire Star Pick fund. Aim of Fund – to provide income and grow your investment. The Fund invests in shares of companies that are involved in infrastructure around the world. The infrastructure sector includes utilities (e.g. water and electricity), highways and railways, airports services, marine ports and services, and oil and gas storage and transportation. The Fund does not invest directly in infrastructure assets. Recent Fund performance is – 1yr  9.26%, 3yr  24.69%.");
 
       PersonReview person1review1 = new PersonReview {
         Person = person1,

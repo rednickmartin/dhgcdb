@@ -23,6 +23,8 @@ namespace DHGCDB.DAL
     public DbSet<FundSelection> FundSelections { get; set; }
     public DbSet<FundATRAllocation> FundATRAllocations { get; set; }
     public DbSet<PersonReview> PersonReviews { get; set; }
+    public DbSet<Sector> Sectors { get; set; }
+    public DbSet<SectorGrouping> SectorGroupings { get; set; }
 
 
     // Still to do:

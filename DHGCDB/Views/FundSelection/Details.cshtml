@@ -1,0 +1,120 @@
+﻿@model DHGCDB.ViewModels.FundSelectionForView
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Fund Selection</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludedInPensionFundSelections)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludedInPensionFundSelections)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IncludedInInvestmentFundSelections)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IncludedInInvestmentFundSelections)
+        </dd>
+
+    </dl>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID })
+    </p>
+    <hr />
+    <h4>Included Funds</h4>
+    <table class="table">
+        <tr>
+            <th>
+                Asset Sector
+            </th>
+            <th>
+                50
+            </th>
+            <th>
+                60
+            </th>
+            <th>
+                70
+            </th>
+            <th>
+                80
+            </th>
+            <th>
+                90
+            </th>
+            <th>
+                100
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Funds.FirstOrDefault().Name)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach(var fund in Model.Funds) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => fund.AssetSector )
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => fund.ATR50 )
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => fund.ATR60)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => fund.ATR70)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => fund.ATR80)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => fund.ATR90)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => fund.ATR100)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => fund.Name)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "FundDetails", new { id = fund.ID }) |
+                @Html.ActionLink("Delete", "DeleteFund", new { id = fund.ID })
+            </td>
+        </tr>
+        }
+        <tr>
+            <td><b>TOTALS</b></td>
+            <td><b>@Model.Total50</b></td>
+            <td><b>@Model.Total60</b></td>
+            <td><b>@Model.Total70</b></td>
+            <td><b>@Model.Total80</b></td>
+            <td><b>@Model.Total90</b></td>
+            <td><b>@Model.Total100</b></td>
+            <td></td>
+            <td></td>
+        </tr>
+     </table>
+     <hr />
+</div>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

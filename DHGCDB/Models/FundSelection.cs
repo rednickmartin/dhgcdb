@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace DHGCDB.Models
 {
@@ -16,7 +17,16 @@ namespace DHGCDB.Models
 
     public string Name { get; set; }
 
+    [Display(Name = "Date Created")]
+    [DataType(DataType.Date)]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
     public DateTime DateCreated { get; set; }
+
+    [Display(Name = "Included In Pension Fund Selections?")]
+    public bool IncludedInPensionFundSelections { get; set; }
+
+    [Display(Name = "Included In Investment Fund Selections?")]
+    public bool IncludedInInvestmentFundSelections { get; set; }
 
     public virtual ICollection<Fund> Funds { get; set; }
   }
