@@ -1,0 +1,82 @@
+﻿@model DHGCDB.ViewModels.ReviewForView
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Review</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReviewDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReviewDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ValuationDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ValuationDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsJoint)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsJoint)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PortfolioSize)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PortfolioSize)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AnnualCharges)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AnnualCharges)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GrowthIndividual)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GrowthIndividual)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumberOfFunds)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumberOfFunds)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to Client", "Details", "Client", new { ID = Model.ClientID }, new { } )
+</p>

@@ -1,0 +1,35 @@
+﻿@model IEnumerable<DHGCDB.Models.Client>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.Name)</th>
+        <th>Individuals</th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @item.Name
+        </td>
+        <td>
+            @item.Individuals
+        </td>
+        <td>
+            @Html.ActionLink("Change Name/Address", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Client Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>   
+}
+
+</table>
