@@ -20,6 +20,7 @@ namespace DHGCDB.ViewModels
       Name = fund.Name;
       Description = fund.Description;
       FundSelectionID = fund.FundSelection.ID;
+      SectorGroupingID = fund.Sector.SectorGrouping.ID;
 
       ATRAllocations = new List<FundATRAllocation>();
       foreach(var allocation in fund.Allocations) {
@@ -50,6 +51,7 @@ namespace DHGCDB.ViewModels
       return percentage == 0 ? "" : percentage.ToString();
     }
 
+    public int SectorGroupingID { get; set; }
     public string AssetSector { get; set; }
 
     public string ATR50

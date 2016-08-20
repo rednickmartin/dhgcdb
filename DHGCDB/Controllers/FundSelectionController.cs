@@ -45,6 +45,18 @@ namespace DHGCDB.Models
         fundSelectionForView.Funds.Add(fundForView);
       }
 
+      fundSelectionForView.AssetMix = new List<SectorGroupingForView>();
+      foreach(var sectorGrouping in db.SectorGroupings.OrderBy(sg => sg.ID).ToList()) {
+        var sectorGroupingForView = new SectorGroupingForView(sectorGrouping);
+        sectorGroupingForView.ATR50Sum = fundSelectionForView.Funds.Where(f => f.SectorGroupingID == sectorGrouping.ID).Select(f => f.Percentage("50")).Sum();
+        sectorGroupingForView.ATR60Sum = fundSelectionForView.Funds.Where(f => f.SectorGroupingID == sectorGrouping.ID).Select(f => f.Percentage("60")).Sum();
+        sectorGroupingForView.ATR70Sum = fundSelectionForView.Funds.Where(f => f.SectorGroupingID == sectorGrouping.ID).Select(f => f.Percentage("70")).Sum();
+        sectorGroupingForView.ATR80Sum = fundSelectionForView.Funds.Where(f => f.SectorGroupingID == sectorGrouping.ID).Select(f => f.Percentage("80")).Sum();
+        sectorGroupingForView.ATR90Sum = fundSelectionForView.Funds.Where(f => f.SectorGroupingID == sectorGrouping.ID).Select(f => f.Percentage("90")).Sum();
+        sectorGroupingForView.ATR100Sum = fundSelectionForView.Funds.Where(f => f.SectorGroupingID == sectorGrouping.ID).Select(f => f.Percentage("100")).Sum();
+        fundSelectionForView.AssetMix.Add(sectorGroupingForView);
+      }
+
       return View(fundSelectionForView);
     }
 

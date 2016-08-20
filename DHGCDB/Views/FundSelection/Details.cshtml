@@ -114,6 +114,71 @@
         </tr>
      </table>
      <hr />
+    <hr />
+    <h4>Asset Mix Percentages</h4>
+    <table class="table">
+        <tr>
+            <th>
+                
+            </th>
+            <th>
+                50
+            </th>
+            <th>
+                60
+            </th>
+            <th>
+                70
+            </th>
+            <th>
+                80
+            </th>
+            <th>
+                90
+            </th>
+            <th>
+                100
+            </th>
+        </tr>
+
+        @foreach(var sector in Model.AssetMix) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => sector.Name )
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => sector.ATR50Sum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => sector.ATR60Sum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => sector.ATR70Sum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => sector.ATR80Sum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => sector.ATR90Sum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => sector.ATR100Sum)
+            </td>
+        </tr>
+        }
+        <tr>
+            <td><b>TOTALS</b></td>
+            <td><b>@Model.Total50</b></td>
+            <td><b>@Model.Total60</b></td>
+            <td><b>@Model.Total70</b></td>
+            <td><b>@Model.Total80</b></td>
+            <td><b>@Model.Total90</b></td>
+            <td><b>@Model.Total100</b></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <hr />
 </div>
 <p>
     @Html.ActionLink("Back to List", "Index")

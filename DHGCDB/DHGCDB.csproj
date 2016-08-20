@@ -245,6 +245,7 @@
     <Compile Include="ViewModels\PersonReviewForView.cs" />
     <Compile Include="ViewModels\FundSelectionForView.cs" />
     <Compile Include="ViewModels\ReviewForView.cs" />
+    <Compile Include="ViewModels\SectorGroupingForView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />

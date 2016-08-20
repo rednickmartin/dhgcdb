@@ -47,5 +47,7 @@ namespace DHGCDB.ViewModels
     public int Total100 { get { return Total("100"); } }
 
     public ICollection<FundForView> Funds { get; set; }
+
+    public IList<SectorGroupingForView> AssetMix { get; set; }
   }
 }
