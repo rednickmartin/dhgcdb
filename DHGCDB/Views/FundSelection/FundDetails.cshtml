@@ -26,15 +26,12 @@
             @Html.DisplayFor(model => model.Description )
         </dd>
     </dl>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.ID })
-    </p>
     <hr />
     <h4>ATR Allocations</h4>
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ATRAllocations.FirstOrDefault().AttitudeToRisk.Name )
+                ATR Score
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ATRAllocations.FirstOrDefault().Percentage )
@@ -42,23 +39,35 @@
             <th></th>
         </tr>
 
-        @foreach(var atr in Model.ATRAllocations ) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => atr.AttitudeToRisk.Name )
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => atr.Percentage )
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "EditATRAllocation", new { id = atr.ID }) |
-                @Html.ActionLink("Delete", "DeleteATRAllocation", new { id = atr.ID })
-            </td>
+            <td>50</td>
+            <td>@Html.DisplayFor(model => model.ATR50)</td>
         </tr>
-        }
+        <tr>
+            <td>60</td>
+            <td>@Html.DisplayFor(model => model.ATR60)</td>
+        </tr>
+        <tr>
+            <td>70</td>
+            <td>@Html.DisplayFor(model => model.ATR70)</td>
+        </tr>
+        <tr>
+            <td>80</td>
+            <td>@Html.DisplayFor(model => model.ATR80)</td>
+        </tr>
+        <tr>
+            <td>90</td>
+            <td>@Html.DisplayFor(model => model.ATR90)</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>@Html.DisplayFor(model => model.ATR100)</td>
+        </tr>
+
      </table>
      <hr />
 </div>
 <p>
+    @Html.ActionLink("Edit", "EditFund", new { id = Model.ID }) | 
     @Html.ActionLink("Back to Fund Selection", "Details", new { ID = Model.FundSelectionID } )
 </p>

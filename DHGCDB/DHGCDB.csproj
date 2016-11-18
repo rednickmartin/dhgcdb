@@ -340,6 +340,7 @@
     <Content Include="Views\FundSelection\Edit.cshtml" />
     <Content Include="Views\FundSelection\Index.cshtml" />
     <Content Include="Views\FundSelection\FundDetails.cshtml" />
+    <Content Include="Views\FundSelection\EditFund.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

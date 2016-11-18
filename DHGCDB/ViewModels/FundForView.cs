@@ -84,6 +84,19 @@ namespace DHGCDB.ViewModels
       get { return PercentageString("100"); }
     }
 
+    [Display(Name = "ATR 50 Score")]
+    public int ATR50Input { get; set; }
+    [Display(Name = "ATR 60 Score")]
+    public int ATR60Input { get; set; }
+    [Display(Name = "ATR 70 Score")]
+    public int ATR70Input { get; set; }
+    [Display(Name = "ATR 80 Score")]
+    public int ATR80Input { get; set; }
+    [Display(Name = "ATR 90 Score")]
+    public int ATR90Input { get; set; }
+    [Display(Name = "ATR 100 Score")]
+    public int ATR100Input { get; set; }
+
     [Display(Name = "Market Commentary")]
     public string Description { get; set; }
 
