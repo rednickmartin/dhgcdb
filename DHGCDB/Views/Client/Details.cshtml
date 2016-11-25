@@ -141,6 +141,7 @@
                 </td>
                 <td>
                     @Html.ActionLink("Details", "Details", "Review", new { id = item.ID }, new { } ) |
+                    @Html.ActionLink("Create Report", "CreateReviewDocument", "Review", new { id = item.ID }, new { }) |
                     @Html.ActionLink("Delete", "Delete", "Review", new { id = item.ID }, new { })
                 </td>
             </tr>

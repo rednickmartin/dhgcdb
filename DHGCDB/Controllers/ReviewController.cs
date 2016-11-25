@@ -330,6 +330,21 @@ namespace DHGCDB.Views
     }
 
 
+    public ActionResult CreateReviewDocument(int? id)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+      Review review = db.Reviews.Find(id);
+      if(review == null) {
+        return HttpNotFound();
+      }
+
+      var location = Controllers.ReportCreater.Create(review);
+      return Redirect(String.Format(@"file://{0}", location));
+    }
+
+
     protected override void Dispose(bool disposing)
     {
       if(disposing) {

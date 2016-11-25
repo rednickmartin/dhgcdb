@@ -44,6 +44,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.1\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -138,6 +142,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
@@ -197,6 +202,8 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\BusinessTypeController.cs" />
     <Compile Include="Controllers\ClientController.cs" />
+    <Compile Include="Controllers\Queries.cs" />
+    <Compile Include="Controllers\ReportCreater.cs" />
     <Compile Include="DAL\ClientDBContext.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -239,6 +246,7 @@
     <Compile Include="Models\SectorGrouping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Templates\QueryMappings.cs" />
     <Compile Include="ViewModels\ClientAddress.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
     <Compile Include="ViewModels\FundForView.cs" />
@@ -341,6 +349,8 @@
     <Content Include="Views\FundSelection\Index.cshtml" />
     <Content Include="Views\FundSelection\FundDetails.cshtml" />
     <Content Include="Views\FundSelection\EditFund.cshtml" />
+    <Content Include="Templates\query_mappings.dat" />
+    <Content Include="Templates\template.docx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
