@@ -208,7 +208,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Controllers\PersonController.cs" />
     <Compile Include="DAL\ClientDBInitializer.cs" />
     <Compile Include="Global.asax.cs">
@@ -222,7 +221,6 @@
     <Compile Include="Migrations\201607270838301_Gender-BirthDate.Designer.cs">
       <DependentUpon>201607270838301_Gender-BirthDate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\AttitudeToRisk.cs" />

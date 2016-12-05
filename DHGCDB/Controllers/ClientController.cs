@@ -71,7 +71,7 @@ namespace DHGCDB.Controllers
     }
 
     // GET: Client/Create
-    public ActionResult AddIndividual()
+    public ActionResult AddIndividual(int? id)
     {
       return View();
     }

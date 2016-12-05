@@ -11,12 +11,16 @@ namespace DHGCDB.Models
     
     public virtual Client Client { get; set; }
 
+    [Required]
     public string Title { get; set; }
 
+    [Required]
     public string FirstName { get; set; }
 
+    [Required]
     public string Surname { get; set; }
 
+    [Required]
     public string Gender { get; set; }
 
     public bool IsPrimary { get; set; }
@@ -30,10 +34,5 @@ namespace DHGCDB.Models
     {
       return string.Format("{0} {1} {2}", Title, FirstName, Surname);
     }
-  }
-
-  public class PersonDBContext : DbContext
-  {
-    public DbSet<Person> People { get; set; }
   }
 }
