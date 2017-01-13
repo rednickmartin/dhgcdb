@@ -16,9 +16,7 @@ namespace DHGCDB.ViewModels
     public PersonReviewForView(PersonReview personReview)
     {
       ID = personReview.ID;
-      InvestmentAttitudeToRisk = personReview.InvestmentAttitudeToRisk.ID;
       InvestmentFundSelection = personReview.InvestmentFundSelection.ID;
-      PensionAttitudeToRisk = personReview.PensionAttitudeToRisk.ID;
       PensionFundSelection = personReview.PensionFundSelection.ID;
       YearOfRiskScore = personReview.ATRYear;
       RiskChanged = personReview.ATRChanged;
@@ -43,20 +41,10 @@ namespace DHGCDB.ViewModels
 
     public string PersonName { get; set; }
 
-    [Display(Name = "Investment - Attitude To Risk")]
-    public int InvestmentAttitudeToRisk { get; set; }
-    [Display(Name = "Investment - Attitude To Risk")]
-    public string InvestmentAttitudeToRiskDisplay { get; set; }
-
     [Display(Name = "Investment - Fund Selection")]
     public int InvestmentFundSelection { get; set; }
     [Display(Name = "Investment - Fund Selection")]
     public string InvestmentFundSelectionDisplay { get; set; }
-
-    [Display(Name = "Pension - Attitude To Risk")]
-    public int PensionAttitudeToRisk { get; set; }
-    [Display(Name = "Pension - Attitude To Risk")]
-    public string PensionAttitudeToRiskDisplay { get; set; }
 
     [Display(Name = "Pension - Fund Selection")]
     public int PensionFundSelection { get; set; }

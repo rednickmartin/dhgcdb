@@ -77,9 +77,7 @@ namespace DHGCDB.Views
         var personReviewForView = new PersonReviewForView(personReview);
         personReviewForView.PersonName = personReview.Person.ToString();
 
-        personReviewForView.PensionAttitudeToRiskDisplay = personReview.PensionAttitudeToRisk.Name;
         personReviewForView.PensionFundSelectionDisplay = personReview.PensionFundSelection.Name;
-        personReviewForView.InvestmentAttitudeToRiskDisplay = personReview.InvestmentAttitudeToRisk.Name;
         personReviewForView.InvestmentFundSelectionDisplay = personReview.InvestmentFundSelection.Name;
         reviewForView.IndividualReviews.Add(personReviewForView);
       }
@@ -253,9 +251,7 @@ namespace DHGCDB.Views
         PersonReview personReview = personReviewForView.PersonReview;
         personReview.Person = person;
         personReview.Review = review;
-        personReview.PensionAttitudeToRisk = db.AttitudeToRiskSelections.Find(personReviewForView.PensionAttitudeToRisk);
         personReview.PensionFundSelection = db.FundSelections.Find(personReviewForView.PensionFundSelection);
-        personReview.InvestmentAttitudeToRisk = db.AttitudeToRiskSelections.Find(personReviewForView.InvestmentAttitudeToRisk);
         personReview.InvestmentFundSelection = db.FundSelections.Find(personReviewForView.InvestmentFundSelection);
 
         db.PersonReviews.Add(personReview);
@@ -315,9 +311,7 @@ namespace DHGCDB.Views
       }
 
       if(ModelState.IsValid) {
-        personReview.InvestmentAttitudeToRisk = db.AttitudeToRiskSelections.Find(personReviewForView.InvestmentAttitudeToRisk);
         personReview.InvestmentFundSelection = db.FundSelections.Find(personReviewForView.InvestmentFundSelection);
-        personReview.PensionAttitudeToRisk = db.AttitudeToRiskSelections.Find(personReviewForView.PensionAttitudeToRisk);
         personReview.PensionFundSelection = db.FundSelections.Find(personReviewForView.PensionFundSelection);
         personReview.ATRYear = personReviewForView.YearOfRiskScore;
         personReview.ATRChanged = personReviewForView.RiskChanged;

@@ -224,6 +224,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\AttitudeToRisk.cs" />
+    <Compile Include="Models\AttitudeToRiskCategory.cs" />
     <Compile Include="Models\BusinessType.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Fund.cs" />
@@ -237,6 +238,7 @@
     <Compile Include="Models\PensionATR.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\PersonReview.cs" />
+    <Compile Include="Models\PersonsAttitudeToRisk.cs" />
     <Compile Include="Models\ReviewHowConducted.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\ReviewType.cs" />
@@ -248,6 +250,7 @@
     <Compile Include="ViewModels\ClientAddress.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
     <Compile Include="ViewModels\FundForView.cs" />
+    <Compile Include="ViewModels\PersonsAttitudeToRiskForView.cs" />
     <Compile Include="ViewModels\PersonReviewForView.cs" />
     <Compile Include="ViewModels\FundSelectionForView.cs" />
     <Compile Include="ViewModels\ReviewForView.cs" />
@@ -351,6 +354,7 @@
     <Content Include="Views\FundSelection\EditFund.cshtml" />
     <Content Include="Templates\query_mappings.dat" />
     <Content Include="Templates\template.docx" />
+    <Content Include="Views\Client\AddPersonAttitudeToRisk.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

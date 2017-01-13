@@ -17,26 +17,10 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <div class="form-group">
-            @Html.LabelFor(model => model.InvestmentAttitudeToRisk, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.InvestmentAttitudeToRisk, Model.AttitudeToRiskList, "Please select", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.InvestmentAttitudeToRisk, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.InvestmentFundSelection, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.InvestmentFundSelection, Model.FundSelection, "Please select", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.InvestmentFundSelection, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PensionAttitudeToRisk, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.PensionAttitudeToRisk, Model.AttitudeToRiskList, "Please select", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.PensionAttitudeToRisk, "", new { @class = "text-danger" })
             </div>
         </div>
 

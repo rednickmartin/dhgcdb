@@ -13,10 +13,8 @@ namespace DHGCDB.Models
 
     public virtual Review Review { get; set; }
 
-    public virtual AttitudeToRisk PensionAttitudeToRisk { get; set; }
     public virtual FundSelection PensionFundSelection { get; set; }
 
-    public virtual AttitudeToRisk InvestmentAttitudeToRisk { get; set; }
     public virtual FundSelection InvestmentFundSelection { get; set;  }
 
     public int ATRYear { get; set; }

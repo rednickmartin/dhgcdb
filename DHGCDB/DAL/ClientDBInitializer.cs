@@ -77,8 +77,57 @@ namespace DHGCDB.DAL
       context.AttitudeToRiskSelections.Add(atr90);
       context.AttitudeToRiskSelections.Add(atr100);
 
+      var atrCatInvestment = new AttitudeToRiskCategory { Name = "Investment" };
+      var atrCatPension = new AttitudeToRiskCategory { Name = "Pension" };
+
+      context.AttitudeToRiskCategories.Add(atrCatInvestment);
+      context.AttitudeToRiskCategories.Add(atrCatPension);
+
+      person1.AttitudeToRiskHistory.Add(new PersonsAttitudeToRisk {
+        FromDate = DateTime.Parse("2012-07-31"),
+        AttitudeToRiskCategory = atrCatInvestment,
+        AttitudeToRisk = atr60,
+        Person = person1
+      });
+
+      person1.AttitudeToRiskHistory.Add(new PersonsAttitudeToRisk {
+        FromDate = DateTime.Parse("2012-07-31"),
+        AttitudeToRiskCategory = atrCatPension,
+        AttitudeToRisk = atr70,
+        Person = person1
+      });
+
+      person1.AttitudeToRiskHistory.Add(new PersonsAttitudeToRisk {
+        FromDate = DateTime.Parse("2014-07-20"),
+        AttitudeToRiskCategory = atrCatInvestment,
+        AttitudeToRisk = atr70,
+        Person = person1
+      });
+
+      person2.AttitudeToRiskHistory.Add(new PersonsAttitudeToRisk {
+        FromDate = DateTime.Parse("2012-07-31"),
+        AttitudeToRiskCategory = atrCatInvestment,
+        AttitudeToRisk = atr50,
+        Person = person2
+      });
+
+      person2.AttitudeToRiskHistory.Add(new PersonsAttitudeToRisk {
+        FromDate = DateTime.Parse("2012-07-31"),
+        AttitudeToRiskCategory = atrCatPension,
+        AttitudeToRisk = atr60,
+        Person = person2
+      });
+
+      person2.AttitudeToRiskHistory.Add(new PersonsAttitudeToRisk {
+        FromDate = DateTime.Parse("2014-07-20"),
+        AttitudeToRiskCategory = atrCatPension,
+        AttitudeToRisk = atr80,
+        Person = person2
+      });
+
+
       context.BusinessTypes.Add(new BusinessType { Name = "ISA" });
-      context.BusinessTypes.Add(new BusinessType { Name = "Pens" });
+      context.BusinessTypes.Add(new BusinessType { Name = "Pension" });
       context.BusinessTypes.Add(new BusinessType { Name = "Bond" });
       context.BusinessTypes.Add(new BusinessType { Name = "W/P Bond" });
       context.BusinessTypes.Add(new BusinessType { Name = "CIA" });
@@ -307,8 +356,6 @@ namespace DHGCDB.DAL
       PersonReview person1review1 = new PersonReview {
         Person = person1,
         Review = review1,
-        InvestmentAttitudeToRisk = atr60,
-        PensionAttitudeToRisk = atr70,
         InvestmentFundSelection = fundSelection1,
         PensionFundSelection = fundSelection2,
         ATRYear = 2015,
@@ -319,8 +366,6 @@ namespace DHGCDB.DAL
       PersonReview person1review2 = new PersonReview {
         Person = person1,
         Review = review2,
-        InvestmentAttitudeToRisk = atr70,
-        PensionAttitudeToRisk = atr70,
         InvestmentFundSelection = fundSelection1,
         PensionFundSelection = fundSelection2,
         ATRYear = 2016,
@@ -331,8 +376,6 @@ namespace DHGCDB.DAL
       PersonReview person2review1 = new PersonReview {
         Person = person1,
         Review = review1,
-        InvestmentAttitudeToRisk = atr50,
-        PensionAttitudeToRisk = atr60,
         InvestmentFundSelection = fundSelection1,
         PensionFundSelection = fundSelection2,
         ATRYear = 2015,
@@ -343,8 +386,6 @@ namespace DHGCDB.DAL
       PersonReview person2review2 = new PersonReview {
         Person = person1,
         Review = review2,
-        InvestmentAttitudeToRisk = atr50,
-        PensionAttitudeToRisk = atr80,
         InvestmentFundSelection = fundSelection1,
         PensionFundSelection = fundSelection2,
         ATRYear = 2016,

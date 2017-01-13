@@ -75,7 +75,78 @@
 }
 
 <div>
-    @Html.ActionLink("Back to Client Detail", "Details", new { ID = Model.Client.ID })
+    @Html.ActionLink("Add new attitude to risk", "AddPersonAttitudeToRisk", new { ID = Model.ID })
+</div>
+
+<h2>Current Attitude To Risk</h2>
+
+@{ var allCurrentAttitudeToRisk = Model.AllCurrentAttitudeToRisk; }
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => allCurrentAttitudeToRisk.FirstOrDefault().AttitudeToRiskCategory.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => allCurrentAttitudeToRisk.FirstOrDefault().FromDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => allCurrentAttitudeToRisk.FirstOrDefault().AttitudeToRisk.Name)
+        </th>
+    </tr>
+
+    @foreach(var item in allCurrentAttitudeToRisk) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.AttitudeToRiskCategory.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FromDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AttitudeToRisk.Name)
+        </td>
+    </tr>
+    };
+
+</table>
+
+<h2>Previous Attitude To Risk</h2>
+
+@{ var allPreviousAttitudeToRisk = Model.PreviousAttitudeToRisk; }
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => allPreviousAttitudeToRisk.FirstOrDefault().AttitudeToRiskCategory.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => allPreviousAttitudeToRisk.FirstOrDefault().FromDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => allPreviousAttitudeToRisk.FirstOrDefault().AttitudeToRisk.Name)
+        </th>
+    </tr>
+
+    @foreach(var item in allPreviousAttitudeToRisk) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.AttitudeToRiskCategory.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FromDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AttitudeToRisk.Name)
+        </td>
+    </tr>
+    };
+
+</table>
+
+
+<div>
+    @Html.ActionLink("Back to Client Detail", "Details", new { ID = Model.Client.ID})
 </div>
 
 @section Scripts {

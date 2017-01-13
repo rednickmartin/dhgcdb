@@ -16,6 +16,16 @@ namespace DHGCDB.Controllers
   {
     private ClientDBContext db = new ClientDBContext();
 
+    private Dictionary<string, string> GetAttitudeToRiskList()
+    {
+      return db.AttitudeToRiskSelections.ToDictionary(t => t.ID.ToString(), t => t.Name);
+    }
+
+    private Dictionary<string, string> GetAttitudeToRiskCategoryList()
+    {
+      return db.AttitudeToRiskCategories.ToDictionary(t => t.ID.ToString(), t => t.Name);
+    }
+
     // GET: Client
     public ActionResult Index()
     {
@@ -240,6 +250,62 @@ namespace DHGCDB.Controllers
       db.SaveChanges();
       return RedirectToAction("Details", new { ID = client.ID });
     }
+
+
+
+    // GET: Client/AddPersonAttitudeToRisk/5
+    public ActionResult AddPersonAttitudeToRisk(int? id)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+
+      ViewBag.AttitudeToRiskList = GetAttitudeToRiskList();
+      ViewBag.AttitudeToRiskCategoryList = GetAttitudeToRiskCategoryList();
+
+      Person person = db.People.Find(id);
+      if(person == null) {
+        return HttpNotFound();
+      }
+
+      return View();
+    }
+
+    // POST: Client/AddPersonAttitudeToRisk/5
+    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+    // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult AddPersonAttitudeToRisk(int? id, [Bind(Include = "ID,FromDate,AttitudeToRiskCategory,AttitudeToRisk")] PersonsAttitudeToRiskForView patrv)
+    {
+      if(ModelState.IsValid) {
+        var person = db.People.Find(id);
+        if(person == null) {
+          return HttpNotFound();
+        }
+
+        var atrcat = db.AttitudeToRiskCategories.Find(patrv.AttitudeToRiskCategory);
+        if(atrcat == null) {
+          return HttpNotFound();
+        }
+
+        var atr = db.AttitudeToRiskSelections.Find(patrv.AttitudeToRisk);
+        if(atr == null) {
+          return HttpNotFound();
+        }
+
+        var patr = new PersonsAttitudeToRisk { Person = person, FromDate = patrv.FromDate, AttitudeToRisk = atr, AttitudeToRiskCategory = atrcat };
+        person.AttitudeToRiskHistory.Add(patr);
+        db.PeoplesAttitudeToRisks.Add(patr);
+
+        db.SaveChanges();
+
+        return RedirectToAction("EditIndividual", new { ID = id });
+      }
+
+      return View(patrv);
+    }
+
 
 
 

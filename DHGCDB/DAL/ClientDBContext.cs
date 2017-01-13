@@ -25,6 +25,8 @@ namespace DHGCDB.DAL
     public DbSet<PersonReview> PersonReviews { get; set; }
     public DbSet<Sector> Sectors { get; set; }
     public DbSet<SectorGrouping> SectorGroupings { get; set; }
+    public DbSet<AttitudeToRiskCategory> AttitudeToRiskCategories { get; set; }
+    public DbSet<PersonsAttitudeToRisk> PeoplesAttitudeToRisks { get; set; }
 
 
     // Still to do:
