@@ -58,6 +58,7 @@ namespace DHGCDB.DAL
       var address1 = new Address { FirstLine = "435 Whippendell Road", Town = "Watford", County = "Hertfordshire", PostCode = "WD18 7PS" };
       client1.Address = address1;
 
+
       context.People.Add(person1);
       context.People.Add(person2);
       context.Clients.Add(client1);
@@ -126,12 +127,34 @@ namespace DHGCDB.DAL
       });
 
 
-      context.BusinessTypes.Add(new BusinessType { Name = "ISA" });
-      context.BusinessTypes.Add(new BusinessType { Name = "Pension" });
-      context.BusinessTypes.Add(new BusinessType { Name = "Bond" });
+      var businessTypeCIA = new BusinessType { Name = "CIA" };
+      var businessTypePension = new BusinessType { Name = "Pension" };
+      var businessTypeISA = new BusinessType { Name = "ISA" };
+      var businessTypeBond = new BusinessType { Name = "Bond" };
+
+      context.BusinessTypes.Add(businessTypeISA);
+      context.BusinessTypes.Add(businessTypePension);
+      context.BusinessTypes.Add(businessTypeBond);
       context.BusinessTypes.Add(new BusinessType { Name = "W/P Bond" });
-      context.BusinessTypes.Add(new BusinessType { Name = "CIA" });
+      context.BusinessTypes.Add(businessTypeCIA);
       context.BusinessTypes.Add(new BusinessType { Name = "GIA" });
+
+      var jointInvestmentClient1 = new Product { BusinessType = businessTypeCIA, Client = client1, Name = "Combined Investment", StartDate = DateTime.Parse("2012-07-31") };
+      context.Products.Add(jointInvestmentClient1);
+      client1.Products.Add(jointInvestmentClient1);
+
+      var person1Pension = new Product { BusinessType = businessTypePension, Client = client1, Person = person1, Name = "Nicks Pension", StartDate = DateTime.Parse("2012-07-31") };
+      context.Products.Add(person1Pension);
+      person1.PersonProducts.Add(person1Pension);
+
+      var person1ISA = new Product { BusinessType = businessTypeISA, Client = client1, Person = person1, Name = "Nicks ISA", StartDate = DateTime.Parse("2012-07-31") };
+      context.Products.Add(person1ISA);
+      person1.PersonProducts.Add(person1ISA);
+
+      var person2Bond = new Product { BusinessType = businessTypeBond, Client = client1, Person = person2, Name = "Natalie's Bond", StartDate = DateTime.Parse("2012-07-31") };
+      context.Products.Add(person2Bond);
+      person2.PersonProducts.Add(person2Bond);
+
 
       var conductedAtHome = new ReviewtHowConducted { Name = "Home" };
       var conductedAtWork = new ReviewtHowConducted { Name = "Work" };

@@ -71,6 +71,9 @@ namespace DHGCDB.Views
       Client client = review.Client;
       ReviewForView reviewForView = new ReviewForView(review);
       reviewForView.ClientID = client.ID;
+      reviewForView.HowConductedView = review.HowConducted.Name;
+      reviewForView.KIIDsGivenView = review.KIIDSGiven.Name;
+      reviewForView.ReviewTypeView = review.ReviewType.Name;
 
       foreach(var personReviewID in db.PersonReviews.Where(pr => pr.Review.ID == id).Select(pr => pr.ID).ToList()) {
         var personReview = db.PersonReviews.Find(personReviewID);
@@ -141,7 +144,13 @@ namespace DHGCDB.Views
       if(review == null) {
         return HttpNotFound();
       }
-      return View(new ReviewForView(review));
+
+      var reviewForView = new ReviewForView(review);
+      reviewForView.HowConductedList = new SelectList(GetHowConductedList(), "Key", "Value");
+      reviewForView.KIIDsGivenList = new SelectList(GetKIIDsGivenList(), "Key", "Value");
+      reviewForView.ReviewTypeList = new SelectList(GetReviewTypeList(), "Key", "Value");
+
+      return View(reviewForView);
     }
 
     // POST: Review/Edit/5
@@ -149,10 +158,20 @@ namespace DHGCDB.Views
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit([Bind(Include = "ID,Name,ReviewDate,ValuationDate,IsJoint,PortfolioSize,AnnualCharges,NumberOfFunds")] ReviewForView reviewForView)
+    public ActionResult Edit([Bind(Include = "ID,Name,ReviewDate,ValuationDate,IsJoint,PortfolioSize,AnnualCharges,NumberOfFunds,HowConducted,ReviewType,KIIDsGiven")] ReviewForView reviewForView)
     {
       if(ModelState.IsValid) {
-        Review review = reviewForView.Review;
+        Review review = db.Reviews.Find(reviewForView.ID);
+
+        ReviewtHowConducted howConducted = db.ReviewHowConducted.Find(reviewForView.HowConducted);
+        review.HowConducted = howConducted;
+
+        ReviewType reviewType = db.ReviewTypes.Find(reviewForView.ReviewType);
+        review.ReviewType = reviewType;
+
+        KIIDSGiven kiidsGiven = db.KIIDSGivenTypes.Find(reviewForView.KIIDsGiven);
+        review.KIIDSGiven = kiidsGiven;
+
         db.Entry(review).State = EntityState.Modified;
         db.SaveChanges();
         return RedirectToAction("Details", new { ID = review.ID });

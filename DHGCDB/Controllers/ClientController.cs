@@ -26,6 +26,11 @@ namespace DHGCDB.Controllers
       return db.AttitudeToRiskCategories.ToDictionary(t => t.ID.ToString(), t => t.Name);
     }
 
+    private Dictionary<string, string> GetBusinessTypeList()
+    {
+      return db.BusinessTypes.ToDictionary(t => t.ID.ToString(), t => t.Name);
+    }
+
     // GET: Client
     public ActionResult Index()
     {
@@ -304,6 +309,173 @@ namespace DHGCDB.Controllers
       }
 
       return View(patrv);
+    }
+
+
+    // GET: Client/EditJointProduct/1/5
+    public ActionResult EditJointProduct(int? id, int? subid)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+
+      if(subid == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+
+      Client client = db.Clients.Find(id);
+      if(client == null) {
+        return HttpNotFound();
+      }
+
+      Product product = db.Products.Find(subid);
+      if(product == null) {
+        return HttpNotFound();
+      }
+
+      var productForView = new ProductForView(product);
+      productForView.ClientID = id.Value;
+      productForView.BusinessTypeList = new SelectList(GetBusinessTypeList(), "Key", "Value");
+      return View(productForView);
+    }
+
+    // POST: Client/EditJointProduct/1/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult EditJointProduct(int? id, int? subid, [Bind(Include = "ID,ClientID,Name,StartDate,BusinessType")] ProductForView productForView)
+    {
+      if(ModelState.IsValid) {
+        var product = db.Products.Find(subid);
+
+        if(product == null) {
+          return HttpNotFound();
+        }
+
+        var businessType = db.BusinessTypes.Find(productForView.BusinessType);
+        if(businessType == null) {
+          return HttpNotFound();
+        }
+
+        product.Name = productForView.Name;
+        product.StartDate = productForView.StartDate;
+        product.BusinessType = businessType;
+
+        db.SaveChanges();
+
+        return RedirectToAction("Details", new { ID = productForView.ClientID });
+      }
+
+      return View(productForView);
+    }
+
+    // GET: Client/EditIndividualProduct/1/5
+    public ActionResult EditIndividualProduct(int? id, int? subid)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+
+      if(subid == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+
+      Person person = db.People.Find(id);
+      if(person == null) {
+        return HttpNotFound();
+      }
+
+      Product product = db.Products.Find(subid);
+      if(product == null) {
+        return HttpNotFound();
+      }
+
+      var productForView = new ProductForView(product);
+      productForView.ClientID = person.Client.ID;
+      productForView.PersonID = person.ID;
+      productForView.BusinessTypeList = new SelectList(GetBusinessTypeList(), "Key", "Value");
+      return View(productForView);
+    }
+
+    // POST: Client/EditIndividualProduct/1/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult EditIndividualProduct(int? id, int? subid, [Bind(Include = "ID,ClientID,PersonID,Name,StartDate,BusinessType")] ProductForView productForView)
+    {
+      if(ModelState.IsValid) {
+        var product = db.Products.Find(subid);
+
+        if(product == null) {
+          return HttpNotFound();
+        }
+
+        var businessType = db.BusinessTypes.Find(productForView.BusinessType);
+        if(businessType == null) {
+          return HttpNotFound();
+        }
+
+        product.Name = productForView.Name;
+        product.StartDate = productForView.StartDate;
+        product.BusinessType = businessType;
+
+        db.SaveChanges();
+
+        return RedirectToAction("EditIndividual", new { ID = productForView.PersonID });
+      }
+
+      return View(productForView);
+    }
+
+    // GET: Client/AddJointProduct/5
+    public ActionResult AddJointProduct(int? id)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+
+      Client client = db.Clients.Find(id);
+      if(client == null) {
+        return HttpNotFound();
+      }
+
+      ViewBag.BusinessTypeList = GetBusinessTypeList();
+
+      return View();
+    }
+
+    // POST: Client/AddJointProduct/1
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult AddJointProduct([Bind(Include = "ID,ClientID,Name,StartDate,BusinessType")] ProductForView productForView)
+    {
+      // TODO: Get This working
+
+      if(ModelState.IsValid) {
+        Client client = db.Clients.Find(productForView.ClientID);
+        if(client == null) {
+          return HttpNotFound();
+        }
+
+        var businessType = db.BusinessTypes.Find(productForView.BusinessType);
+        if(businessType == null) {
+          return HttpNotFound();
+        }
+
+        var product = new Product {
+          Name = productForView.Name,
+          Client = client,
+          BusinessType = businessType,
+          StartDate = productForView.StartDate
+        };
+
+        db.Products.Add(product);
+        client.Products.Add(product);
+
+        db.SaveChanges();
+
+        return RedirectToAction("Details", new { ID = productForView.ClientID });
+      }
+
+      return View(productForView);
     }
 
 

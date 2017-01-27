@@ -12,6 +12,7 @@ namespace DHGCDB.Models
     public Person()
     {
       AttitudeToRiskHistory = new List<PersonsAttitudeToRisk>();
+      PersonProducts = new List<Product>();
     }
 
     public int ID { get; set; }
@@ -22,6 +23,7 @@ namespace DHGCDB.Models
     public string Title { get; set; }
 
     [Required]
+    [Display(Name = "First Name")]
     public string FirstName { get; set; }
 
     [Required]
@@ -31,6 +33,9 @@ namespace DHGCDB.Models
     public string Gender { get; set; }
 
     public bool IsPrimary { get; set; }
+
+    [Display(Name = "Individuals Products")]
+    public virtual ICollection<Product> PersonProducts { get; set; }
 
     [Display(Name = "Birth Date")]
     [DataType(DataType.Date)]

@@ -76,6 +76,30 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.HowConducted, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.HowConducted, Model.HowConductedList, "Please select", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.HowConducted, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.KIIDsGiven, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.KIIDsGiven, Model.KIIDsGivenList, "Please select", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.KIIDsGiven, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ReviewType, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ReviewType, Model.ReviewTypeList, "Please select", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ReviewType, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>

@@ -25,6 +25,12 @@ namespace DHGCDB.ViewModels
       AnnualCharges = review.AnnualCharges;
       NumberOfFunds = review.NumberOfFunds;
       IndividualReviews = new List<PersonReviewForView>();
+      HowConducted = review.HowConducted.ID;
+      HowConductedView = review.HowConducted.Name;
+      ReviewType = review.ReviewType.ID;
+      ReviewTypeView = review.ReviewType.Name;
+      KIIDsGiven = review.KIIDSGiven.ID;
+      KIIDsGivenView = review.KIIDSGiven.Name;
     }
 
     public Review Review {
@@ -62,14 +68,22 @@ namespace DHGCDB.ViewModels
 
     public int NumberOfFunds { get; set; }
 
+    public string HowConductedView { get; set; }
+
+    [Display(Name = "How Conducted")]
     public int HowConducted { get; set; }
 
     public SelectList HowConductedList { get; set; }
 
+    public string ReviewTypeView { get; set; }
+    [Display(Name = "Review Type")]
     public int ReviewType { get; set; }
 
     public SelectList ReviewTypeList { get; set; }
 
+    public string KIIDsGivenView { get; set; }
+
+    [Display(Name = "KIIDs Given")]
     public int KIIDsGiven { get; set; }
 
     public SelectList KIIDsGivenList { get; set; }

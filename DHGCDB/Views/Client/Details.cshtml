@@ -62,24 +62,28 @@
          </dl>
      </div>
 
-
+        @{var firstPerson = Model.Persons.FirstOrDefault();}
+ 
         <h4>Individuals</h4>
         <table class="table">
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Persons.FirstOrDefault().Title)
+                    @Html.DisplayNameFor(model => firstPerson.Title)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Persons.FirstOrDefault().FirstName)
+                    @Html.DisplayNameFor(model => firstPerson.FirstName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Persons.FirstOrDefault().Surname)
+                    @Html.DisplayNameFor(model => firstPerson.Surname)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Persons.FirstOrDefault().Gender)
+                    @Html.DisplayNameFor(model => firstPerson.Gender)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Persons.FirstOrDefault().BirthDate)
+                    @Html.DisplayNameFor(model => firstPerson.BirthDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => firstPerson.PersonProducts)
                 </th>
                 <th></th>
             </tr>
@@ -102,6 +106,12 @@
                     @Html.DisplayFor(modelItem => item.BirthDate)
                 </td>
                 <td>
+                    @foreach(var personProduct in item.PersonProducts) {
+                      @Html.DisplayFor(product => personProduct.Name)
+                      <br/>
+                    }
+                </td>
+                <td>
                     @Html.ActionLink("Edit / Add ATR", "EditIndividual", new { id = item.ID }) |
                     @Html.ActionLink("Delete", "DeleteIndividual", new { id = item.ID })
                 </td>
@@ -114,43 +124,78 @@
             @Html.ActionLink("Add Individual", "AddIndividual", "Client", new { ID = Model.ID }, new { })
         </p>
 
-        <h4>Reviews</h4>
+        <h4>Joint Products</h4>
 
-         <p>
-             @Html.ActionLink("Create New Review", "Create", "Review", new { Model.ID }, new { })
-         </p>
+            @{var firstJointProduct = Model.Products.FirstOrDefault();}
 
-        <table class="table">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Reviews.FirstOrDefault().Name )
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Reviews.FirstOrDefault().ReviewDate)
-                </th>
-                <th></th>
-            </tr>
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => firstJointProduct.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => firstJointProduct.BusinessType)
+                    </th>
+                    <th></th>
+                </tr>
 
-            @foreach(var item in Model.Reviews) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name )
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ReviewDate )
-                </td>
-                <td>
-                    @Html.ActionLink("Details", "Details", "Review", new { id = item.ID }, new { } ) |
-                    @Html.ActionLink("Create Report", "CreateReviewDocument", "Review", new { id = item.ID }, new { }) |
-                    @Html.ActionLink("Delete", "Delete", "Review", new { id = item.ID }, new { })
-                </td>
-            </tr>
-            }
+                @foreach(var jointProduct in Model.JointProducts) {
+                  <tr>
+                      <td>
+                          @Html.DisplayFor(model => jointProduct.Name)
+                      </td>
+                      <td>
+                          @Html.DisplayFor(model => jointProduct.BusinessType.Name)
+                      </td>
+                      <td>@Html.ActionLink("Edit", "EditJointProduct", "Client", new { id = Model.ID, subid = jointProduct.ID }, new { }) </td>
+                  </tr>
+                }
 
-        </table>
-
+            </table>
 
         <p>
+            @Html.ActionLink("Add New Joint Product", "AddJointProduct", "Client", new { Model.ID }, new { })
+        </p>
+
+
+    <h4>Reviews</h4>
+
+    <p>
+        @Html.ActionLink("Create New Review", "Create", "Review", new { Model.ID }, new { })
+    </p>
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Reviews.FirstOrDefault().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reviews.FirstOrDefault().ReviewDate)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach(var item in Model.Reviews) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReviewDate)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", "Review", new { id = item.ID }, new { }) |
+                @Html.ActionLink("Create Report", "CreateReviewDocument", "Review", new { id = item.ID }, new { }) |
+                @Html.ActionLink("Delete", "Delete", "Review", new { id = item.ID }, new { })
+            </td>
+        </tr>
+        }
+
+    </table>
+
+
+    <p>
+
             <!-- @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) | -->
             @Html.ActionLink("Back to List", "Index")
-        </p>
+    </p>

@@ -74,6 +74,37 @@
     </div>
 }
 
+<h2>Individual Products</h2>
+
+@{var firstIndividualProduct = Model.PersonProducts.FirstOrDefault();}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => firstIndividualProduct.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => firstIndividualProduct.BusinessType)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach(var individualProduct in Model.PersonProducts) {
+    <tr>
+        <td>
+            @Html.DisplayFor(model => individualProduct.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(model => individualProduct.BusinessType.Name)
+        </td>
+        <td>@Html.ActionLink("Edit", "EditIndividualProduct", "Client", new { id = Model.ID, subid = individualProduct.ID }, new { }) </td>
+    </tr>
+    }
+
+</table>
+
+
+
 <div>
     @Html.ActionLink("Add new attitude to risk", "AddPersonAttitudeToRisk", new { ID = Model.ID })
 </div>

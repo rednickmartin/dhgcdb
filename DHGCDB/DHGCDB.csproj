@@ -239,6 +239,7 @@
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\PersonReview.cs" />
     <Compile Include="Models\PersonsAttitudeToRisk.cs" />
+    <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ReviewHowConducted.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\ReviewType.cs" />
@@ -253,6 +254,7 @@
     <Compile Include="ViewModels\PersonsAttitudeToRiskForView.cs" />
     <Compile Include="ViewModels\PersonReviewForView.cs" />
     <Compile Include="ViewModels\FundSelectionForView.cs" />
+    <Compile Include="ViewModels\ProductForView.cs" />
     <Compile Include="ViewModels\ReviewForView.cs" />
     <Compile Include="ViewModels\SectorGroupingForView.cs" />
   </ItemGroup>
@@ -355,6 +357,9 @@
     <Content Include="Templates\query_mappings.dat" />
     <Content Include="Templates\template.docx" />
     <Content Include="Views\Client\AddPersonAttitudeToRisk.cshtml" />
+    <Content Include="Views\Client\EditJointProduct.cshtml" />
+    <Content Include="Views\Client\AddJointProduct.cshtml" />
+    <Content Include="Views\Client\EditIndividualProduct.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
