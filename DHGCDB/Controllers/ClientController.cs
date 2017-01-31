@@ -447,8 +447,6 @@ namespace DHGCDB.Controllers
     [ValidateAntiForgeryToken]
     public ActionResult AddJointProduct([Bind(Include = "ID,ClientID,Name,StartDate,BusinessType")] ProductForView productForView)
     {
-      // TODO: Get This working
-
       if(ModelState.IsValid) {
         Client client = db.Clients.Find(productForView.ClientID);
         if(client == null) {
@@ -478,6 +476,58 @@ namespace DHGCDB.Controllers
       return View(productForView);
     }
 
+    // GET: Client/AddIndividualProduct/5
+    public ActionResult AddIndividualProduct(int? id)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+
+      Person person = db.People.Find(id);
+      if(person == null) {
+        return HttpNotFound();
+      }
+
+      ViewBag.BusinessTypeList = GetBusinessTypeList();
+
+      return View();
+    }
+
+
+    // POST: Client/AddIndividualProduct/1
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult AddIndividualProduct([Bind(Include = "ID,PersonID,Name,StartDate,BusinessType")] ProductForView productForView)
+    {
+      if(ModelState.IsValid) {
+        Person person = db.People.Find(productForView.PersonID);
+        if(person == null) {
+          return HttpNotFound();
+        }
+
+        var businessType = db.BusinessTypes.Find(productForView.BusinessType);
+        if(businessType == null) {
+          return HttpNotFound();
+        }
+
+        var product = new Product {
+          Name = productForView.Name,
+          Client = person.Client,
+          Person = person,
+          BusinessType = businessType,
+          StartDate = productForView.StartDate
+        };
+
+        db.Products.Add(product);
+        person.PersonProducts.Add(product);
+
+        db.SaveChanges();
+
+        return RedirectToAction("EditIndividual", new { ID = person.ID });
+      }
+
+      return View(productForView);
+    }
 
 
 

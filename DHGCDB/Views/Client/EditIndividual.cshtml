@@ -103,13 +103,18 @@
 
 </table>
 
+<div>
+    @Html.ActionLink("Add new individual product", "AddIndividualProduct", new { ID = Model.ID })
+</div>
 
+
+<h2>Attitude To Risk</h2>
 
 <div>
     @Html.ActionLink("Add new attitude to risk", "AddPersonAttitudeToRisk", new { ID = Model.ID })
 </div>
 
-<h2>Current Attitude To Risk</h2>
+<h3>Current Attitude To Risk</h3>
 
 @{ var allCurrentAttitudeToRisk = Model.AllCurrentAttitudeToRisk; }
 
@@ -142,7 +147,7 @@
 
 </table>
 
-<h2>Previous Attitude To Risk</h2>
+<h3>Previous Attitude To Risk</h3>
 
 @{ var allPreviousAttitudeToRisk = Model.PreviousAttitudeToRisk; }
 

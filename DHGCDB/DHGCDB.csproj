@@ -360,6 +360,7 @@
     <Content Include="Views\Client\EditJointProduct.cshtml" />
     <Content Include="Views\Client\AddJointProduct.cshtml" />
     <Content Include="Views\Client\EditIndividualProduct.cshtml" />
+    <Content Include="Views\Client\AddIndividualProduct.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
