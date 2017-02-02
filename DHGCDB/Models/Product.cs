@@ -23,5 +23,18 @@ namespace DHGCDB.Models
     public virtual Client Client { get; set; }
 
     public virtual Person Person { get; set; }
+
+    public bool ProductFeeAttached { get; set; }
+
+    public virtual ProductFee ProductFee { get; set; }
+
+    [Display(Name = "Product Fee Applies?")]
+    public string ProductFeeForDisplay
+    {
+      get
+      {
+        return ProductFeeAttached ? ProductFee.Percentage.ToString() + "%" : "";
+      }
+    }
   }
 }

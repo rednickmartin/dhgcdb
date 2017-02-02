@@ -240,6 +240,7 @@
     <Compile Include="Models\PersonReview.cs" />
     <Compile Include="Models\PersonsAttitudeToRisk.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductFee.cs" />
     <Compile Include="Models\ReviewHowConducted.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\ReviewType.cs" />

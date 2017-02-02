@@ -143,9 +143,15 @@ namespace DHGCDB.DAL
       context.Products.Add(jointInvestmentClient1);
       client1.Products.Add(jointInvestmentClient1);
 
+
       var person1Pension = new Product { BusinessType = businessTypePension, Client = client1, Person = person1, Name = "Nicks Pension", StartDate = DateTime.Parse("2012-07-31") };
       context.Products.Add(person1Pension);
       person1.PersonProducts.Add(person1Pension);
+
+      var person1PensionProductFee = new ProductFee { Product = person1Pension, Percentage = 0.7f };
+      person1Pension.ProductFeeAttached = true;
+      person1Pension.ProductFee = person1PensionProductFee;
+      context.ProductFees.Add(person1PensionProductFee);
 
       var person1ISA = new Product { BusinessType = businessTypeISA, Client = client1, Person = person1, Name = "Nicks ISA", StartDate = DateTime.Parse("2012-07-31") };
       context.Products.Add(person1ISA);

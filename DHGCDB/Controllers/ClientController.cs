@@ -342,7 +342,7 @@ namespace DHGCDB.Controllers
     // POST: Client/EditJointProduct/1/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult EditJointProduct(int? id, int? subid, [Bind(Include = "ID,ClientID,Name,StartDate,BusinessType")] ProductForView productForView)
+    public ActionResult EditJointProduct(int? id, int? subid, [Bind(Include = "ID,ClientID,Name,StartDate,BusinessType,ProductFeeApplies,ProductFeePercentage")] ProductForView productForView)
     {
       if(ModelState.IsValid) {
         var product = db.Products.Find(subid);
@@ -359,6 +359,20 @@ namespace DHGCDB.Controllers
         product.Name = productForView.Name;
         product.StartDate = productForView.StartDate;
         product.BusinessType = businessType;
+
+        if(product.ProductFeeAttached) {
+          // Thre is a product fee to remove
+          product.ProductFeeAttached = false;
+          var productFeeToRemove = product.ProductFee;
+          db.ProductFees.Remove(productFeeToRemove);
+        }
+
+        if(productForView.ProductFeeApplies) {
+          product.ProductFeeAttached = true;
+          var productFee = new ProductFee { Product = product, Percentage = productForView.ProductFeePercentage };
+          product.ProductFee = productFee;
+          db.ProductFees.Add(productFee);
+        }
 
         db.SaveChanges();
 
@@ -399,7 +413,7 @@ namespace DHGCDB.Controllers
     // POST: Client/EditIndividualProduct/1/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult EditIndividualProduct(int? id, int? subid, [Bind(Include = "ID,ClientID,PersonID,Name,StartDate,BusinessType")] ProductForView productForView)
+    public ActionResult EditIndividualProduct(int? id, int? subid, [Bind(Include = "ID,ClientID,PersonID,Name,StartDate,BusinessType,ProductFeeApplies,ProductFeePercentage")] ProductForView productForView)
     {
       if(ModelState.IsValid) {
         var product = db.Products.Find(subid);
@@ -416,6 +430,20 @@ namespace DHGCDB.Controllers
         product.Name = productForView.Name;
         product.StartDate = productForView.StartDate;
         product.BusinessType = businessType;
+
+        if(product.ProductFeeAttached) {
+          // Thre is a product fee to remove
+          product.ProductFeeAttached = false;
+          var productFeeToRemove = product.ProductFee;
+          db.ProductFees.Remove(productFeeToRemove);
+        }
+
+        if(productForView.ProductFeeApplies) {
+          product.ProductFeeAttached = true;
+          var productFee = new ProductFee { Product = product, Percentage = productForView.ProductFeePercentage };
+          product.ProductFee = productFee;
+          db.ProductFees.Add(productFee);
+        }
 
         db.SaveChanges();
 

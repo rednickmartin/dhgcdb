@@ -136,6 +136,9 @@
                     <th>
                         @Html.DisplayNameFor(model => firstJointProduct.BusinessType)
                     </th>
+                    <th>
+                        @Html.DisplayNameFor(model => firstJointProduct.ProductFeeForDisplay)
+                    </th>
                     <th></th>
                 </tr>
 
@@ -146,6 +149,9 @@
                       </td>
                       <td>
                           @Html.DisplayFor(model => jointProduct.BusinessType.Name)
+                      </td>
+                      <td>
+                          @Html.DisplayFor(model => jointProduct.ProductFeeForDisplay)
                       </td>
                       <td>@Html.ActionLink("Edit", "EditJointProduct", "Client", new { id = Model.ID, subid = jointProduct.ID }, new { }) </td>
                   </tr>

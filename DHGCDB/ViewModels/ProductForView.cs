@@ -20,6 +20,11 @@ namespace DHGCDB.ViewModels
       StartDate = product.StartDate;
       BusinessType = product.BusinessType.ID;
       ClientID = product.Client.ID;
+
+      ProductFeeApplies = product.ProductFeeAttached;
+      if(ProductFeeApplies) {
+        ProductFeePercentage = product.ProductFee.Percentage;
+      }
     }
 
     public int ID { get; set; }
@@ -38,5 +43,11 @@ namespace DHGCDB.ViewModels
     public int BusinessType { get; set; }
 
     public SelectList BusinessTypeList { get; set; }
+
+    [Display(Name = "Product Fee Applies")]
+    public bool ProductFeeApplies { get; set; }
+
+    [Display(Name = "Product Fee Percentage (only applies if above box ticked)")]
+    public float ProductFeePercentage { get; set; }
   }
 }

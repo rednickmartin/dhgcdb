@@ -43,6 +43,22 @@
     </div>
 
     <div class="form-group">
+        @Html.LabelFor(model => model.ProductFeeApplies, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.ProductFeeApplies, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ProductFeeApplies, "", new { @class = "text-danger" })
+       </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ProductFeePercentage, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.ProductFeePercentage, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ProductFeePercentage, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Save" class="btn btn-default" />
         </div>
