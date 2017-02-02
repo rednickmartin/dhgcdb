@@ -336,29 +336,36 @@ namespace DHGCDB.Controllers
       var productForView = new ProductForView(product);
       productForView.ClientID = id.Value;
       productForView.BusinessTypeList = new SelectList(GetBusinessTypeList(), "Key", "Value");
+      productForView.AttitudeToRiskCategoryList = new SelectList(GetAttitudeToRiskCategoryList(), "Key", "Value");
       return View(productForView);
     }
 
     // POST: Client/EditJointProduct/1/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult EditJointProduct(int? id, int? subid, [Bind(Include = "ID,ClientID,Name,StartDate,BusinessType,ProductFeeApplies,ProductFeePercentage")] ProductForView productForView)
+    public ActionResult EditJointProduct(int? id, int? subid, [Bind(Include = "ID,ClientID,Name,StartDate,BusinessType,AttitudeToRiskCategory,ProductFeeApplies,ProductFeePercentage")] ProductForView productForView)
     {
       if(ModelState.IsValid) {
         var product = db.Products.Find(subid);
 
         if(product == null) {
-          return HttpNotFound();
+          return HttpNotFound("Could not find Product");
         }
 
         var businessType = db.BusinessTypes.Find(productForView.BusinessType);
         if(businessType == null) {
-          return HttpNotFound();
+          return HttpNotFound("Could not find Busines Type");
+        }
+
+        var attitudeToRiskCategory = db.AttitudeToRiskCategories.Find(productForView.AttitudeToRiskCategory);
+        if(attitudeToRiskCategory == null) {
+          return HttpNotFound("Could not find Attitude To Risk Category");
         }
 
         product.Name = productForView.Name;
         product.StartDate = productForView.StartDate;
         product.BusinessType = businessType;
+        product.AttitudeToRiskCategory = attitudeToRiskCategory;
 
         if(product.ProductFeeAttached) {
           // Thre is a product fee to remove
@@ -407,29 +414,36 @@ namespace DHGCDB.Controllers
       productForView.ClientID = person.Client.ID;
       productForView.PersonID = person.ID;
       productForView.BusinessTypeList = new SelectList(GetBusinessTypeList(), "Key", "Value");
+      productForView.AttitudeToRiskCategoryList = new SelectList(GetAttitudeToRiskCategoryList(), "Key", "Value");
       return View(productForView);
     }
 
     // POST: Client/EditIndividualProduct/1/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult EditIndividualProduct(int? id, int? subid, [Bind(Include = "ID,ClientID,PersonID,Name,StartDate,BusinessType,ProductFeeApplies,ProductFeePercentage")] ProductForView productForView)
+    public ActionResult EditIndividualProduct(int? id, int? subid, [Bind(Include = "ID,ClientID,PersonID,Name,StartDate,BusinessType,AttitudeToRiskCategory,ProductFeeApplies,ProductFeePercentage")] ProductForView productForView)
     {
       if(ModelState.IsValid) {
         var product = db.Products.Find(subid);
 
         if(product == null) {
-          return HttpNotFound();
+          return HttpNotFound("Could not find Product");
         }
 
         var businessType = db.BusinessTypes.Find(productForView.BusinessType);
         if(businessType == null) {
-          return HttpNotFound();
+          return HttpNotFound("Could not find Business Type");
+        }
+
+        var attitudeToRiskCategory = db.AttitudeToRiskCategories.Find(productForView.AttitudeToRiskCategory);
+        if(attitudeToRiskCategory == null) {
+          return HttpNotFound("Could not find Attitude To Risk Category");
         }
 
         product.Name = productForView.Name;
         product.StartDate = productForView.StartDate;
         product.BusinessType = businessType;
+        product.AttitudeToRiskCategory = attitudeToRiskCategory;
 
         if(product.ProductFeeAttached) {
           // Thre is a product fee to remove
@@ -466,6 +480,7 @@ namespace DHGCDB.Controllers
       }
 
       ViewBag.BusinessTypeList = GetBusinessTypeList();
+      ViewBag.AttitudeToRiskCategoryList = GetAttitudeToRiskCategoryList();
 
       return View();
     }
@@ -473,23 +488,29 @@ namespace DHGCDB.Controllers
     // POST: Client/AddJointProduct/1
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult AddJointProduct([Bind(Include = "ID,ClientID,Name,StartDate,BusinessType")] ProductForView productForView)
+    public ActionResult AddJointProduct([Bind(Include = "ID,ClientID,Name,StartDate,BusinessType,AttitudeToRiskCategory")] ProductForView productForView)
     {
       if(ModelState.IsValid) {
         Client client = db.Clients.Find(productForView.ClientID);
         if(client == null) {
-          return HttpNotFound();
+          return HttpNotFound("Could not find client");
         }
 
         var businessType = db.BusinessTypes.Find(productForView.BusinessType);
         if(businessType == null) {
-          return HttpNotFound();
+          return HttpNotFound("Could not find Business Type");
+        }
+
+        var attitudeToRiskCategory = db.AttitudeToRiskCategories.Find(productForView.AttitudeToRiskCategory);
+        if(attitudeToRiskCategory == null) {
+          return HttpNotFound("Could not find Attitude To Risk Category");
         }
 
         var product = new Product {
           Name = productForView.Name,
           Client = client,
           BusinessType = businessType,
+          AttitudeToRiskCategory = attitudeToRiskCategory,
           StartDate = productForView.StartDate
         };
 
@@ -517,6 +538,7 @@ namespace DHGCDB.Controllers
       }
 
       ViewBag.BusinessTypeList = GetBusinessTypeList();
+      ViewBag.AttitudeToRiskCategoryList = GetAttitudeToRiskCategoryList();
 
       return View();
     }
@@ -525,17 +547,22 @@ namespace DHGCDB.Controllers
     // POST: Client/AddIndividualProduct/1
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult AddIndividualProduct([Bind(Include = "ID,PersonID,Name,StartDate,BusinessType")] ProductForView productForView)
+    public ActionResult AddIndividualProduct([Bind(Include = "ID,PersonID,Name,StartDate,BusinessType,AttitudeToRiskCategory")] ProductForView productForView)
     {
       if(ModelState.IsValid) {
         Person person = db.People.Find(productForView.PersonID);
         if(person == null) {
-          return HttpNotFound();
+          return HttpNotFound("Could not find person");
         }
 
         var businessType = db.BusinessTypes.Find(productForView.BusinessType);
         if(businessType == null) {
-          return HttpNotFound();
+          return HttpNotFound("Could not find Business Type");
+        }
+
+        var attitudeToRiskCategory = db.AttitudeToRiskCategories.Find(productForView.AttitudeToRiskCategory);
+        if(attitudeToRiskCategory == null) {
+          return HttpNotFound("Could not find Attitude To Risk Category");
         }
 
         var product = new Product {
@@ -543,6 +570,7 @@ namespace DHGCDB.Controllers
           Client = person.Client,
           Person = person,
           BusinessType = businessType,
+          AttitudeToRiskCategory = attitudeToRiskCategory,
           StartDate = productForView.StartDate
         };
 

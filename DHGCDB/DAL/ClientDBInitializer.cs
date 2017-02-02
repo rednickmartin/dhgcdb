@@ -139,12 +139,12 @@ namespace DHGCDB.DAL
       context.BusinessTypes.Add(businessTypeCIA);
       context.BusinessTypes.Add(new BusinessType { Name = "GIA" });
 
-      var jointInvestmentClient1 = new Product { BusinessType = businessTypeCIA, Client = client1, Name = "Combined Investment", StartDate = DateTime.Parse("2012-07-31") };
+      var jointInvestmentClient1 = new Product { BusinessType = businessTypeCIA, Client = client1, Name = "Combined Investment", StartDate = DateTime.Parse("2012-07-31"), AttitudeToRiskCategory = atrCatInvestment };
       context.Products.Add(jointInvestmentClient1);
       client1.Products.Add(jointInvestmentClient1);
 
 
-      var person1Pension = new Product { BusinessType = businessTypePension, Client = client1, Person = person1, Name = "Nicks Pension", StartDate = DateTime.Parse("2012-07-31") };
+      var person1Pension = new Product { BusinessType = businessTypePension, Client = client1, Person = person1, Name = "Nicks Pension", StartDate = DateTime.Parse("2012-07-31"), AttitudeToRiskCategory = atrCatPension };
       context.Products.Add(person1Pension);
       person1.PersonProducts.Add(person1Pension);
 
@@ -153,11 +153,11 @@ namespace DHGCDB.DAL
       person1Pension.ProductFee = person1PensionProductFee;
       context.ProductFees.Add(person1PensionProductFee);
 
-      var person1ISA = new Product { BusinessType = businessTypeISA, Client = client1, Person = person1, Name = "Nicks ISA", StartDate = DateTime.Parse("2012-07-31") };
+      var person1ISA = new Product { BusinessType = businessTypeISA, Client = client1, Person = person1, Name = "Nicks ISA", StartDate = DateTime.Parse("2012-07-31"), AttitudeToRiskCategory = atrCatInvestment };
       context.Products.Add(person1ISA);
       person1.PersonProducts.Add(person1ISA);
 
-      var person2Bond = new Product { BusinessType = businessTypeBond, Client = client1, Person = person2, Name = "Natalie's Bond", StartDate = DateTime.Parse("2012-07-31") };
+      var person2Bond = new Product { BusinessType = businessTypeBond, Client = client1, Person = person2, Name = "Natalie's Bond", StartDate = DateTime.Parse("2012-07-31"), AttitudeToRiskCategory = atrCatInvestment };
       context.Products.Add(person2Bond);
       person2.PersonProducts.Add(person2Bond);
 

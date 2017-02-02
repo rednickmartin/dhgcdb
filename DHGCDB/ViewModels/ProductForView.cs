@@ -19,6 +19,7 @@ namespace DHGCDB.ViewModels
       Name = product.Name;
       StartDate = product.StartDate;
       BusinessType = product.BusinessType.ID;
+      AttitudeToRiskCategory = product.AttitudeToRiskCategory.ID;
       ClientID = product.Client.ID;
 
       ProductFeeApplies = product.ProductFeeAttached;
@@ -40,6 +41,7 @@ namespace DHGCDB.ViewModels
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
     public DateTime StartDate { get; set; }
 
+    [Display(Name = "Business Type")]
     public int BusinessType { get; set; }
 
     public SelectList BusinessTypeList { get; set; }
@@ -49,5 +51,10 @@ namespace DHGCDB.ViewModels
 
     [Display(Name = "Product Fee Percentage (only applies if above box ticked)")]
     public float ProductFeePercentage { get; set; }
+
+    [Display(Name = "Which ATR Category should this product follow?")]
+    public int AttitudeToRiskCategory { get; set; }
+
+    public SelectList AttitudeToRiskCategoryList { get; set; }
   }
 }

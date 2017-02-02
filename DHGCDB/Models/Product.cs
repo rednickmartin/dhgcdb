@@ -28,6 +28,9 @@ namespace DHGCDB.Models
 
     public virtual ProductFee ProductFee { get; set; }
 
+    [Required]
+    public virtual AttitudeToRiskCategory AttitudeToRiskCategory { get; set; }
+
     [Display(Name = "Product Fee Applies?")]
     public string ProductFeeForDisplay
     {
