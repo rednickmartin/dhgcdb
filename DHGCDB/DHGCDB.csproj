@@ -241,6 +241,7 @@
     <Compile Include="Models\PersonsAttitudeToRisk.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductFee.cs" />
+    <Compile Include="Models\ProductValuation.cs" />
     <Compile Include="Models\ReviewHowConducted.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\ReviewType.cs" />
@@ -256,6 +257,7 @@
     <Compile Include="ViewModels\PersonReviewForView.cs" />
     <Compile Include="ViewModels\FundSelectionForView.cs" />
     <Compile Include="ViewModels\ProductForView.cs" />
+    <Compile Include="ViewModels\ProductValuationForView.cs" />
     <Compile Include="ViewModels\ReviewForView.cs" />
     <Compile Include="ViewModels\SectorGroupingForView.cs" />
   </ItemGroup>
@@ -362,6 +364,8 @@
     <Content Include="Views\Client\AddJointProduct.cshtml" />
     <Content Include="Views\Client\EditIndividualProduct.cshtml" />
     <Content Include="Views\Client\AddIndividualProduct.cshtml" />
+    <Content Include="Views\Review\JointProductValuation.cshtml" />
+    <Content Include="Views\Review\IndividualProductValuation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

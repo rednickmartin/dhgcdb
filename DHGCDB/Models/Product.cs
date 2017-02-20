@@ -8,6 +8,11 @@ namespace DHGCDB.Models
 {
   public class Product
   {
+    public Product()
+    {
+      Valuations = new List<ProductValuation>();
+    }
+
     public int ID { get; set; }
 
     [Required]
@@ -37,6 +42,16 @@ namespace DHGCDB.Models
       get
       {
         return ProductFeeAttached ? ProductFee.Percentage.ToString() + "%" : "";
+      }
+    }
+
+    public virtual ICollection<ProductValuation> Valuations { get; set; }
+
+    public ProductValuation LatestValuation
+    {
+      get
+      {
+        return Valuations.OrderByDescending(x => x.Date).FirstOrDefault();
       }
     }
   }

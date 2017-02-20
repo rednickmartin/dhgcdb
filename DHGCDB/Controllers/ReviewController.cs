@@ -127,8 +127,16 @@ namespace DHGCDB.Views
         db.Reviews.Add(review);
         db.SaveChanges();
 
-        var firstPersonID = client.Persons.First().ID;
-        return RedirectToAction("CreatePersonReview", "Review", new { ID = review.ID, subID = firstPersonID });
+        if(client.JointProducts.Any()) {
+          // Need to evaluate the joint products
+          var firstProductID = client.JointProducts.First().ID;
+          return RedirectToAction("JointProductValuation", "Review", new { ID = review.ID, subID = firstProductID });
+        }
+        else {
+          // No joint products - go straight to person review
+          var firstPersonID = client.Persons.First().ID;
+          return RedirectToAction("CreatePersonReview", "Review", new { ID = review.ID, subID = firstPersonID });
+        }
       }
 
       return View(reviewForView);
@@ -242,6 +250,19 @@ namespace DHGCDB.Views
       return View();
     }
 
+    private RedirectToRouteResult NextPersonOrClientDetails(Client client, Review review)
+    {
+      foreach(var individual in client.Persons) {
+        var existingPersonReviews = db.PersonReviews.Where(pr => pr.Person.ID == individual.ID && pr.Review.ID == review.ID);
+        if(existingPersonReviews.Any())
+          continue;
+        else
+          return RedirectToAction("CreatePersonReview", "Review", new { id = review.ID, subid = individual.ID });
+      }
+
+      return RedirectToAction("Details", "Client", new { ID = client.ID });
+    }
+
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -276,17 +297,14 @@ namespace DHGCDB.Views
         db.PersonReviews.Add(personReview);
         db.SaveChanges();
 
-        foreach(var individual in client.Persons) {
-          var existingPersonReviews = db.PersonReviews.Where(pr => pr.Person.ID == individual.ID && pr.Review.ID == review.ID);
-          if(existingPersonReviews.Any())
-            continue;
-          else
-            return RedirectToAction("CreatePersonReview", "Review", new { id = review.ID, subid = individual.ID });
+        if(person.PersonProducts.Any()) {
+          return RedirectToAction("IndividualProductValuation", new { ID = review.ID, subid = person.PersonProducts.First().ID });
         }
-
-        return RedirectToAction("Details", "Client", new { ID = client.ID });
-
+        else {
+          return NextPersonOrClientDetails(client, review);
+        }
       }
+
       return View(personReviewForView);
     }
 
@@ -340,6 +358,167 @@ namespace DHGCDB.Views
         return RedirectToAction("Details", new { ID = personReview.Review.ID });
       }
       return View(personReviewForView);
+    }
+
+
+    // GET: Review/JointProductValuation/5/20
+    public ActionResult JointProductValuation(int? id, int? subid)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+      if(subid == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+
+      Review review = db.Reviews.Find(id);
+      if(review == null) {
+        return HttpNotFound("Review not found");
+      }
+
+      Product jointProduct = db.Products.Find(subid);
+      if(jointProduct == null) {
+        return HttpNotFound("Product not found");
+      }
+
+      ViewBag.ProductName = jointProduct.Name;
+      return View();
+    }
+
+    // POST: Review/JointProductValuation/5/20
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult JointProductValuation(int? id, int? subid, [Bind(Include = "Date,Value")] ProductValuationForView productValuationForView)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+      if(subid == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+
+      Review review = db.Reviews.Find(id);
+      if(review == null) {
+        return HttpNotFound("Review not found");
+      }
+
+      Product jointProduct = db.Products.Find(subid);
+      if(jointProduct == null) {
+        return HttpNotFound("Product not found");
+      }
+
+      if(ModelState.IsValid) {
+        var productValuation = new ProductValuation {
+          Date = productValuationForView.Date,
+          Value = productValuationForView.Value,
+          Product = jointProduct,
+          AsPartOfReview = review
+        };
+
+        db.ProductValuations.Add(productValuation);
+        jointProduct.Valuations.Add(productValuation);
+
+        db.SaveChanges();
+
+        // Are there any other joint products to evaluate?
+        var unvaluedProducts = review.Client.JointProducts.Where(p => {
+          var v = p.LatestValuation;
+          return (v == null || v.AsPartOfReview == null || v.AsPartOfReview.ID != review.ID);
+        });
+
+        if(unvaluedProducts.Any()) {
+          // Joint products to value - redirect to first in the list
+          return RedirectToAction("JointProductValuation", new { ID = review.ID, subid = unvaluedProducts.First().ID });
+        }
+        else {
+          var firstPersonID = review.Client.Persons.First().ID;
+          return RedirectToAction("CreatePersonReview", "Review", new { ID = review.ID, subID = firstPersonID });
+        }
+      }
+
+      return View(productValuationForView);
+    }
+
+
+    // GET: Review/IndividualProductValuation/5/20
+    public ActionResult IndividualProductValuation(int? id, int? subid)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+      if(subid == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+
+      Review review = db.Reviews.Find(id);
+      if(review == null) {
+        return HttpNotFound("Review not found");
+      }
+
+      Product individualProduct = db.Products.Find(subid);
+      if(individualProduct == null) {
+        return HttpNotFound("Product not found");
+      }
+
+      ViewBag.ProductName = individualProduct.Name;
+      ViewBag.PersonName = individualProduct.Person.ToString();
+
+      return View();
+    }
+
+    // POST: Review/IndividualProductValuation/5/20
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult IndividualProductValuation(int? id, int? subid, [Bind(Include = "Date,Value")] ProductValuationForView productValuationForView)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+      if(subid == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+
+      Review review = db.Reviews.Find(id);
+      if(review == null) {
+        return HttpNotFound("Review not found");
+      }
+
+      Product individualProduct = db.Products.Find(subid);
+      if(individualProduct == null) {
+        return HttpNotFound("Product not found");
+      }
+
+      if(ModelState.IsValid) {
+        var productValuation = new ProductValuation {
+          Date = productValuationForView.Date,
+          Value = productValuationForView.Value,
+          Product = individualProduct,
+          AsPartOfReview = review
+        };
+
+        db.ProductValuations.Add(productValuation);
+        individualProduct.Valuations.Add(productValuation);
+
+        db.SaveChanges();
+
+        var Person = individualProduct.Person;
+
+        // Are there any other joint products to evaluate?
+        var unvaluedProducts = Person.PersonProducts.Where(p => {
+          var v = p.LatestValuation;
+          return (v == null || v.AsPartOfReview == null || v.AsPartOfReview.ID != review.ID);
+        });
+
+        if(unvaluedProducts.Any()) {
+          // Individual products to value - redirect to first in the list
+          return RedirectToAction("IndividualProductValuation", new { ID = review.ID, subid = unvaluedProducts.First().ID });
+        }
+        else {
+          return NextPersonOrClientDetails(review.Client, review);
+        }
+      }
+
+      return View(productValuationForView);
     }
 
 

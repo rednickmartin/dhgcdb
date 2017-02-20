@@ -29,6 +29,7 @@ namespace DHGCDB.DAL
     public DbSet<PersonsAttitudeToRisk> PeoplesAttitudeToRisks { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<ProductFee> ProductFees { get; set; }
+    public DbSet<ProductValuation> ProductValuations { get; set; }
 
 
     // Still to do:
