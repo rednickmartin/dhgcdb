@@ -16,8 +16,6 @@ namespace DHGCDB.ViewModels
     public PersonReviewForView(PersonReview personReview)
     {
       ID = personReview.ID;
-      InvestmentFundSelection = personReview.InvestmentFundSelection.ID;
-      PensionFundSelection = personReview.PensionFundSelection.ID;
       YearOfRiskScore = personReview.ATRYear;
       RiskChanged = personReview.ATRChanged;
       AboveOrBelowOutput = personReview.ATROutput;
@@ -41,16 +39,6 @@ namespace DHGCDB.ViewModels
 
     public string PersonName { get; set; }
 
-    [Display(Name = "Investment - Fund Selection")]
-    public int InvestmentFundSelection { get; set; }
-    [Display(Name = "Investment - Fund Selection")]
-    public string InvestmentFundSelectionDisplay { get; set; }
-
-    [Display(Name = "Pension - Fund Selection")]
-    public int PensionFundSelection { get; set; }
-    [Display(Name = "Pension - Fund Selection")]
-    public string PensionFundSelectionDisplay { get; set; }
-
     [Display(Name = "Year of Risk Score")]
     public int YearOfRiskScore { get; set; }
 
@@ -61,7 +49,6 @@ namespace DHGCDB.ViewModels
     public string AboveOrBelowOutput { get; set; }
 
     public SelectList AttitudeToRiskList { get; set; }
-    public SelectList FundSelection { get; set; }
     public SelectList RiskChangeSelection { get; set; }
     public SelectList AboveOrBelowOutputSelection { get; set; }
 

@@ -32,5 +32,13 @@ namespace DHGCDB.ViewModels
 
     [Display(Name = "Valuation")]
     public float Value { get; set; }
+
+    public bool HasAssetMix { get; set; }
+
+    [Display(Name = "Seasonal Asset Mix")]
+    public int AssetMix { get; set; }
+    [Display(Name = "Seasonal Asset Mix")]
+    public string AssetMixDisplay { get; set; }
+
   }
 }

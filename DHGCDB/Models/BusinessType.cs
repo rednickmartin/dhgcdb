@@ -10,5 +10,7 @@ namespace DHGCDB.Models
     public int ID { get; set; }
 
     public string Name { get; set; }
+
+    public bool HasAssetMix { get; set; }
   }
 }

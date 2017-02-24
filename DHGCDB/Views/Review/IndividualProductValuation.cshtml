@@ -31,12 +31,51 @@
             </div>
         </div>
 
+        @if(ViewBag.HasAssetMix) {
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AssetMix, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.AssetMix, new SelectList(ViewBag.FundSelectionList, "Key", "Value"), "Please select", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AssetMix, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        }
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>
+}
+
+@{IEnumerable<DHGCDB.Models.ProductValuation> valuations = ViewBag.PreviousValuations; }
+
+@if(valuations.Any()) {
+<div>
+    <h3>Previous Valuations</h3>
+
+    <table class="table">
+        <tr>
+            <th>Date of valuation</th>
+            <th>Valuation</th>
+        </tr>
+
+        @foreach(var valuation in valuations) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => valuation.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => valuation.Value)
+            </td>
+        </tr>
+        }
+
+    </table>
+
+</div>
 }
 
 @section Scripts {

@@ -127,26 +127,35 @@ namespace DHGCDB.DAL
       });
 
 
-      var businessTypeCIA = new BusinessType { Name = "CIA" };
-      var businessTypePension = new BusinessType { Name = "Pension" };
-      var businessTypeISA = new BusinessType { Name = "ISA" };
-      var businessTypeBond = new BusinessType { Name = "Bond" };
+      var businessTypeCIA = new BusinessType { Name = "CIA", HasAssetMix = true };
+      var businessTypePension = new BusinessType { Name = "Pension", HasAssetMix = true };
+      var businessTypeISA = new BusinessType { Name = "ISA", HasAssetMix = true };
+      var businessTypeBond = new BusinessType { Name = "Bond", HasAssetMix = true };
+      var businessTypeWPBond = new BusinessType { Name = "Bond", HasAssetMix = false };
+      var businessTypeGIA = new BusinessType { Name = "GIA", HasAssetMix = true };
+
 
       context.BusinessTypes.Add(businessTypeISA);
       context.BusinessTypes.Add(businessTypePension);
-      context.BusinessTypes.Add(businessTypeBond);
-      context.BusinessTypes.Add(new BusinessType { Name = "W/P Bond" });
+      context.BusinessTypes.Add(businessTypeBond);                                                                           
+      context.BusinessTypes.Add(businessTypeWPBond);
       context.BusinessTypes.Add(businessTypeCIA);
-      context.BusinessTypes.Add(new BusinessType { Name = "GIA" });
+      context.BusinessTypes.Add(businessTypeGIA);
 
       var jointInvestmentClient1 = new Product { BusinessType = businessTypeCIA, Client = client1, Name = "Combined Investment", StartDate = DateTime.Parse("2012-07-31"), AttitudeToRiskCategory = atrCatInvestment };
       context.Products.Add(jointInvestmentClient1);
       client1.Products.Add(jointInvestmentClient1);
-      var jointInvestmentClient1Valuation1 = new ProductValuation { Product = jointInvestmentClient1, Date = DateTime.Parse("2012-07-31"), Value = 4000 };
+      var jointInvestmentClient1Valuation1 = new ProductValuation {
+        Product = jointInvestmentClient1, Date = DateTime.Parse("2012-07-31"), Value = 4000
+      };
       context.ProductValuations.Add(jointInvestmentClient1Valuation1);
-      var jointInvestmentClient1Valuation2 = new ProductValuation { Product = jointInvestmentClient1, Date = DateTime.Parse("2013-07-31"), Value = 5000 };
+      var jointInvestmentClient1Valuation2 = new ProductValuation {
+        Product = jointInvestmentClient1, Date = DateTime.Parse("2013-07-31"), Value = 5000
+      };
       context.ProductValuations.Add(jointInvestmentClient1Valuation2);
-      var jointInvestmentClient1Valuation3 = new ProductValuation { Product = jointInvestmentClient1, Date = DateTime.Parse("2014-07-31"), Value = 5500 };
+      var jointInvestmentClient1Valuation3 = new ProductValuation {
+        Product = jointInvestmentClient1, Date = DateTime.Parse("2014-07-31"), Value = 5500
+      };
       context.ProductValuations.Add(jointInvestmentClient1Valuation3);
       jointInvestmentClient1.Valuations.Add(jointInvestmentClient1Valuation1);
       jointInvestmentClient1.Valuations.Add(jointInvestmentClient1Valuation2);
@@ -172,7 +181,7 @@ namespace DHGCDB.DAL
       context.ProductValuations.Add(person1ISAValuation);
       person1.PersonProducts.Add(person1ISA);
 
-      var person2Bond = new Product { BusinessType = businessTypeBond, Client = client1, Person = person2, Name = "Natalie's Bond", StartDate = DateTime.Parse("2012-07-31"), AttitudeToRiskCategory = atrCatInvestment };
+      var person2Bond = new Product { BusinessType = businessTypeWPBond, Client = client1, Person = person2, Name = "Natalie's Bond", StartDate = DateTime.Parse("2012-07-31"), AttitudeToRiskCategory = atrCatInvestment };
       var person2BondValuation = new ProductValuation { Product = person2Bond, Date = DateTime.Parse("2012-07-31"), Value = 10000 };
       person2Bond.Valuations.Add(person2BondValuation);
       context.Products.Add(person2Bond);
@@ -408,8 +417,6 @@ namespace DHGCDB.DAL
       PersonReview person1review1 = new PersonReview {
         Person = person1,
         Review = review1,
-        InvestmentFundSelection = fundSelection1,
-        PensionFundSelection = fundSelection2,
         ATRYear = 2015,
         ATRChanged = "Same",
         ATROutput = "Above"         
@@ -418,8 +425,6 @@ namespace DHGCDB.DAL
       PersonReview person1review2 = new PersonReview {
         Person = person1,
         Review = review2,
-        InvestmentFundSelection = fundSelection1,
-        PensionFundSelection = fundSelection2,
         ATRYear = 2016,
         ATRChanged = "Up",
         ATROutput = "Below"
@@ -428,8 +433,6 @@ namespace DHGCDB.DAL
       PersonReview person2review1 = new PersonReview {
         Person = person1,
         Review = review1,
-        InvestmentFundSelection = fundSelection1,
-        PensionFundSelection = fundSelection2,
         ATRYear = 2015,
         ATRChanged = "Same",
         ATROutput = "Above"
@@ -438,12 +441,15 @@ namespace DHGCDB.DAL
       PersonReview person2review2 = new PersonReview {
         Person = person1,
         Review = review2,
-        InvestmentFundSelection = fundSelection1,
-        PensionFundSelection = fundSelection2,
         ATRYear = 2016,
         ATRChanged = "Up",
         ATROutput = "Below"
       };
+
+      jointInvestmentClient1Valuation2.AssetMix = fundSelection1;
+      jointInvestmentClient1Valuation3.AssetMix = fundSelection1;
+      person1PensionValuation.AssetMix = fundSelection2;
+      person1ISAValuation.AssetMix = fundSelection1;
 
       context.PersonReviews.Add(person1review1);
       context.PersonReviews.Add(person1review2);

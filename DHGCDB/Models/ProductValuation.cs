@@ -18,5 +18,7 @@ namespace DHGCDB.Models
     public DateTime Date { get; set; }
 
     public float Value { get; set; }
+
+    public virtual FundSelection AssetMix { get; set; }
   }
 }

@@ -80,8 +80,6 @@ namespace DHGCDB.Views
         var personReviewForView = new PersonReviewForView(personReview);
         personReviewForView.PersonName = personReview.Person.ToString();
 
-        personReviewForView.PensionFundSelectionDisplay = personReview.PensionFundSelection.Name;
-        personReviewForView.InvestmentFundSelectionDisplay = personReview.InvestmentFundSelection.Name;
         reviewForView.IndividualReviews.Add(personReviewForView);
       }
 
@@ -291,8 +289,6 @@ namespace DHGCDB.Views
         PersonReview personReview = personReviewForView.PersonReview;
         personReview.Person = person;
         personReview.Review = review;
-        personReview.PensionFundSelection = db.FundSelections.Find(personReviewForView.PensionFundSelection);
-        personReview.InvestmentFundSelection = db.FundSelections.Find(personReviewForView.InvestmentFundSelection);
 
         db.PersonReviews.Add(personReview);
         db.SaveChanges();
@@ -324,7 +320,6 @@ namespace DHGCDB.Views
       var personReviewForView = new PersonReviewForView(personReview);
       personReviewForView.ReviewID = personReview.Review.ID;
       personReviewForView.AttitudeToRiskList = new SelectList(GetAttitudeToRiskList(), "Key", "Value");
-      personReviewForView.FundSelection = new SelectList(GetFundSelectionList(), "Key", "Value");
       personReviewForView.RiskChangeSelection = new SelectList(GetRiskChangedList(), "Key", "Value");
       personReviewForView.AboveOrBelowOutputSelection = new SelectList(GetAboveOrBelowOutputList(), "Key", "Value");
 
@@ -348,8 +343,6 @@ namespace DHGCDB.Views
       }
 
       if(ModelState.IsValid) {
-        personReview.InvestmentFundSelection = db.FundSelections.Find(personReviewForView.InvestmentFundSelection);
-        personReview.PensionFundSelection = db.FundSelections.Find(personReviewForView.PensionFundSelection);
         personReview.ATRYear = personReviewForView.YearOfRiskScore;
         personReview.ATRChanged = personReviewForView.RiskChanged;
         personReview.ATROutput = personReviewForView.AboveOrBelowOutput;
@@ -381,14 +374,19 @@ namespace DHGCDB.Views
         return HttpNotFound("Product not found");
       }
 
-      ViewBag.ProductName = jointProduct.Name;
+      ViewBag.ProductName = string.Format("{0} ({1})", jointProduct.Name, jointProduct.BusinessType.Name);
+      ViewBag.HasAssetMix = jointProduct.BusinessType.HasAssetMix;
+      ViewBag.FundSelectionList = GetFundSelectionList();
+
+      ViewBag.PreviousValuations = jointProduct.Valuations.OrderByDescending(v => v.Date);
+
       return View();
     }
 
     // POST: Review/JointProductValuation/5/20
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult JointProductValuation(int? id, int? subid, [Bind(Include = "Date,Value")] ProductValuationForView productValuationForView)
+    public ActionResult JointProductValuation(int? id, int? subid, [Bind(Include = "Date,Value,AssetMix")] ProductValuationForView productValuationForView)
     {
       if(id == null) {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -414,6 +412,15 @@ namespace DHGCDB.Views
           Product = jointProduct,
           AsPartOfReview = review
         };
+
+        if(jointProduct.BusinessType.HasAssetMix) {
+          var assetMix = db.FundSelections.Find(productValuationForView.AssetMix);
+          if(assetMix == null) {
+            return HttpNotFound("Asset Mix not found");
+          }
+
+          productValuation.AssetMix = assetMix;
+        }
 
         db.ProductValuations.Add(productValuation);
         jointProduct.Valuations.Add(productValuation);
@@ -460,8 +467,12 @@ namespace DHGCDB.Views
         return HttpNotFound("Product not found");
       }
 
-      ViewBag.ProductName = individualProduct.Name;
+      ViewBag.ProductName = string.Format("{0} ({1})", individualProduct.Name, individualProduct.BusinessType.Name);
       ViewBag.PersonName = individualProduct.Person.ToString();
+      ViewBag.HasAssetMix = individualProduct.BusinessType.HasAssetMix;
+      ViewBag.FundSelectionList = GetFundSelectionList();
+
+      ViewBag.PreviousValuations = individualProduct.Valuations.OrderByDescending(v => v.Date);
 
       return View();
     }
@@ -469,7 +480,7 @@ namespace DHGCDB.Views
     // POST: Review/IndividualProductValuation/5/20
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult IndividualProductValuation(int? id, int? subid, [Bind(Include = "Date,Value")] ProductValuationForView productValuationForView)
+    public ActionResult IndividualProductValuation(int? id, int? subid, [Bind(Include = "Date,Value,AssetMix")] ProductValuationForView productValuationForView)
     {
       if(id == null) {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -495,6 +506,15 @@ namespace DHGCDB.Views
           Product = individualProduct,
           AsPartOfReview = review
         };
+
+        if(individualProduct.BusinessType.HasAssetMix) {
+          var assetMix = db.FundSelections.Find(productValuationForView.AssetMix);
+          if(assetMix == null) {
+            return HttpNotFound("Asset Mix not found");
+          }
+
+          productValuation.AssetMix = assetMix;
+        }
 
         db.ProductValuations.Add(productValuation);
         individualProduct.Valuations.Add(productValuation);
