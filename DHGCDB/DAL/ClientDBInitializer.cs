@@ -344,8 +344,8 @@ namespace DHGCDB.DAL
       fund4.Allocations.Add(fund4Allocation2);
       fund4.Allocations.Add(fund4Allocation3);
 
-      var fundSelection1 = new FundSelection { Name = "Skandia ISA Funds Winter 2014", DateCreated = DateTime.Today, IncludedInInvestmentFundSelections = true, IncludedInPensionFundSelections = true };
-      var fundSelection2 = new FundSelection { Name = "Alternative Winter 2014", DateCreated = DateTime.Today, IncludedInInvestmentFundSelections = true, IncludedInPensionFundSelections = true };
+      var fundSelection1 = new FundSelection { Name = "Skandia ISA Funds Winter 2014", DateCreated = DateTime.Today };
+      var fundSelection2 = new FundSelection { Name = "Alternative Winter 2014", DateCreated = DateTime.Today };
 
       fund1.FundSelection = fundSelection1;
       fund2.FundSelection = fundSelection1;
@@ -382,7 +382,7 @@ namespace DHGCDB.DAL
 
 
       // Jan2014
-      var skandiaInvestmentBond = new FundSelection { Name = "Skandia ISA Account Jarnuary 2014", DateCreated = DateTime.Today, IncludedInInvestmentFundSelections = true };
+      var skandiaInvestmentBond = new FundSelection { Name = "Skandia ISA Account Jarnuary 2014", DateCreated = DateTime.Today };
       context.FundSelections.Add(skandiaInvestmentBond);
       AddFund(context, skandiaInvestmentBond, "Invesco Perpetual Corporate Bond", ukBond, atr50, atr60, atr70, atr80, 3, 3, 2, 1, "This is an OBSR GOLD rated fund managed by Paul Read and Paul Causer and is a Citywire Selected fund. Aim of Fund – to achieve a high level of overall return, with relative security of capital. It intends to invest primarily in fixed interest securities. Recent Fund performance is – 1yr  14.15 %, 3yr  18.69 %, 5yr  34.44%.");
       AddFund(context, skandiaInvestmentBond, "Royal London Corporate Bond", ukBond, atr50, atr60, atr70, atr80, 3, 2, 1, 1, "This is an OBSR GOLD rated fund managed by Jonathan Platt and Sajiv Vaidand, both rated A by the Citywire survey of top fund managers over 3 years and was Shortlisted in the Investment Week Awards 2012 for the Sterling Corporate Bond sector. Aim of Fund – to achieve a combination of mainly income with some capital growth over the medium (5 years) to long term (7 years). Recent Fund performance is – 1yr  12.65%, 3yr  30.68%, 5yrs  34.07%.");

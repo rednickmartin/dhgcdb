@@ -15,6 +15,11 @@ namespace DHGCDB.Models
   {
     private ClientDBContext db = new ClientDBContext();
 
+    private Dictionary<string, string> GetSectorsList()
+    {
+      return db.Sectors.ToDictionary(t => t.ID.ToString(), t => t.Name);
+    }
+
     // GET: FundSelections
     public ActionResult Index()
     {
@@ -71,12 +76,12 @@ namespace DHGCDB.Models
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Create([Bind(Include = "ID,Name,DateCreated,IncludedInPensionFundSelections,IncludedInInvestmentFundSelections")] FundSelection fundSelection)
+    public ActionResult Create([Bind(Include = "ID,Name,DateCreated")] FundSelection fundSelection)
     {
       if(ModelState.IsValid) {
         db.FundSelections.Add(fundSelection);
         db.SaveChanges();
-        return RedirectToAction("Index");
+        return RedirectToAction("Details", new { ID = fundSelection.ID } );
       }
 
       return View(fundSelection);
@@ -100,7 +105,7 @@ namespace DHGCDB.Models
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit([Bind(Include = "ID,Name,DateCreated,IncludedInPensionFundSelections,IncludedInInvestmentFundSelections")] FundSelection fundSelection)
+    public ActionResult Edit([Bind(Include = "ID,Name,DateCreated")] FundSelection fundSelection)
     {
       if(ModelState.IsValid) {
         db.Entry(fundSelection).State = EntityState.Modified;
@@ -133,6 +138,36 @@ namespace DHGCDB.Models
       db.SaveChanges();
       return RedirectToAction("Index");
     }
+
+
+    // GET: FundSelections/DeleteFund/5
+    public ActionResult DeleteFund(int? id)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+      Fund fund = db.Funds.Find(id);
+      if(fund == null) {
+        return HttpNotFound();
+      }
+      return View(fund);
+    }
+
+    // POST: FundSelections/DeleteFund/5
+    [HttpPost, ActionName("DeleteFund")]
+    [ValidateAntiForgeryToken]
+    public ActionResult DeleteFundConfirmed(int id)
+    {
+      Fund fund = db.Funds.Find(id);
+      FundSelection fundSelection = fund.FundSelection;
+      fundSelection.Funds.Remove(fund);
+      // db.Funds.Remove(fund);
+      //db.FundATRAllocations.RemoveRange(fund.Allocations);
+
+      db.SaveChanges();
+      return RedirectToAction("Details", new { ID = fundSelection.ID });
+    }
+
 
     // GET: FundSelections/FundDetails/5
     public ActionResult FundDetails(int? id)
@@ -187,7 +222,7 @@ namespace DHGCDB.Models
     // POST: FundSelections/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult EditFund(int? id, [Bind(Include = "ID,Name,Description,ATR50Input,ATR50Input,ATR50Input,ATR50Input,ATR50Input,ATR50Input")] FundForView fundForView)
+    public ActionResult EditFund(int? id, [Bind(Include = "ID,Name,Description,ATR50Input,ATR60Input,ATR70Input,ATR80Input,ATR90Input,ATR100Input")] FundForView fundForView)
     {
       if(id == null) {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -197,17 +232,81 @@ namespace DHGCDB.Models
         return HttpNotFound();
       }
 
-      db.FundATRAllocations.RemoveRange(fund.Allocations);
-      AddAllocation(db, fund, "50", fundForView.ATR50Input);
-      AddAllocation(db, fund, "60", fundForView.ATR60Input);
-      AddAllocation(db, fund, "70", fundForView.ATR70Input);
-      AddAllocation(db, fund, "80", fundForView.ATR80Input);
-      AddAllocation(db, fund, "90", fundForView.ATR90Input);
-      AddAllocation(db, fund, "100", fundForView.ATR100Input);
+      if(ModelState.IsValid) {
+        db.FundATRAllocations.RemoveRange(fund.Allocations);
+        AddAllocation(db, fund, "50", fundForView.ATR50Input);
+        AddAllocation(db, fund, "60", fundForView.ATR60Input);
+        AddAllocation(db, fund, "70", fundForView.ATR70Input);
+        AddAllocation(db, fund, "80", fundForView.ATR80Input);
+        AddAllocation(db, fund, "90", fundForView.ATR90Input);
+        AddAllocation(db, fund, "100", fundForView.ATR100Input);
 
-      db.SaveChanges();
+        db.SaveChanges();
 
-      return View(fundForView);   // TODO: redirect to details
+        return RedirectToAction("Details", new { ID = fund.FundSelection.ID });
+      }
+
+      return View(fundForView);
+    }
+
+
+    // GET: FundSelections/AddFund/5
+    public ActionResult AddFund(int? id)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+      FundSelection fundSelection = db.FundSelections.Find(id);
+      if(fundSelection == null) {
+        return HttpNotFound("Fund Selection Not Found");
+      }
+
+      ViewBag.SectorList = GetSectorsList();
+
+      return View();
+    }
+
+    // POST: FundSelections/AddFund/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult AddFund(int? id, [Bind(Include = "Name,Description,Sector,ATR50Input,ATR60Input,ATR70Input,ATR80Input,ATR90Input,ATR100Input")] FundForView fundForView)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+      FundSelection fundSelection = db.FundSelections.Find(id);
+      if(fundSelection == null) {
+        return HttpNotFound("Fund Selection not found");
+      }
+
+      if(ModelState.IsValid) {
+        Sector sector = db.Sectors.Find(fundForView.Sector);
+        if(sector == null) {
+          return HttpNotFound("Sector not found");
+        }
+
+        var fund = new Fund {
+          Name = fundForView.Name,
+          Sector = sector,
+          Description = fundForView.Description,
+          FundSelection = fundSelection
+        };
+
+        db.Funds.Add(fund);
+
+        AddAllocation(db, fund, "50", fundForView.ATR50Input);
+        AddAllocation(db, fund, "60", fundForView.ATR60Input);
+        AddAllocation(db, fund, "70", fundForView.ATR70Input);
+        AddAllocation(db, fund, "80", fundForView.ATR80Input);
+        AddAllocation(db, fund, "90", fundForView.ATR90Input);
+        AddAllocation(db, fund, "100", fundForView.ATR100Input);
+
+        db.SaveChanges();
+
+        return RedirectToAction("Details", new { ID = fund.FundSelection.ID });
+      }
+
+      return View(fundForView);
     }
 
 

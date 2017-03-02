@@ -18,8 +18,6 @@ namespace DHGCDB.ViewModels
     {
       ID = fundSelection.ID;
       Name = fundSelection.Name;
-      IncludedInPensionFundSelections = fundSelection.IncludedInPensionFundSelections;
-      IncludedInInvestmentFundSelections = fundSelection.IncludedInInvestmentFundSelections;
 
       Funds = new List<FundForView>();
     }
@@ -27,12 +25,6 @@ namespace DHGCDB.ViewModels
     public int ID { get; set; }
 
     public string Name { get; set; }
-
-    [Display(Name = "Included In Pension Fund Selections?")]
-    public bool IncludedInPensionFundSelections { get; set; }
-
-    [Display(Name = "Included In Investment Fund Selections?")]
-    public bool IncludedInInvestmentFundSelections { get; set; }
 
     private int Total(string atr)
     {

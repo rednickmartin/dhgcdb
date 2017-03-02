@@ -18,28 +18,17 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IncludedInPensionFundSelections)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IncludedInPensionFundSelections)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IncludedInInvestmentFundSelections)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IncludedInInvestmentFundSelections)
-        </dd>
-
     </dl>
     <p>
         @Html.ActionLink("Edit", "Edit", new { id = Model.ID })
     </p>
     <hr />
     <h4>Included Funds</h4>
+
+    <p>
+        @Html.ActionLink("Add Fund", "AddFund", new { id = Model.ID })
+    </p>
+
     <table class="table">
         <tr>
             <th>
@@ -97,6 +86,7 @@
             </td>
             <td>
                 @Html.ActionLink("Details", "FundDetails", new { id = fund.ID }) |
+                @Html.ActionLink("Edit", "EditFund", new { id = fund.ID }) |
                 @Html.ActionLink("Delete", "DeleteFund", new { id = fund.ID })
             </td>
         </tr>
@@ -114,6 +104,11 @@
         </tr>
      </table>
      <hr />
+
+    <p>
+        @Html.ActionLink("Add Fund", "AddFund", new { id = Model.ID })
+    </p>
+
     <hr />
     <h4>Asset Mix Percentages</h4>
     <table class="table">
