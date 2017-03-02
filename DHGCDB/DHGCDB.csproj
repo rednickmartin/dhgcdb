@@ -366,6 +366,8 @@
     <Content Include="Views\Client\AddIndividualProduct.cshtml" />
     <Content Include="Views\Review\JointProductValuation.cshtml" />
     <Content Include="Views\Review\IndividualProductValuation.cshtml" />
+    <Content Include="Views\Review\AddPersonMissingATR.cshtml" />
+    <Content Include="Views\Review\ChangePersonATR.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

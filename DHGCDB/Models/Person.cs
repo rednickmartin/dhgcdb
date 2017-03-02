@@ -78,6 +78,21 @@ namespace DHGCDB.Models
       }
     }
 
+    public bool MissingATR(out AttitudeToRiskCategory atrCategory)
+    {
+      foreach (var product in PersonProducts) {
+        var thisAtrCat = product.AttitudeToRiskCategory;
+        if(!AttitudeToRiskCategories.Contains(thisAtrCat)) {
+          atrCategory = thisAtrCat;
+          return true;
+        }
+      }
+
+      // Cycled through all products, they all have an ATR for their category
+      atrCategory = null;
+      return false;
+    }
+
     public override string ToString()
     {
       return string.Format("{0} {1} {2}", Title, FirstName, Surname);

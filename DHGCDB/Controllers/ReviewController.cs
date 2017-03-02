@@ -37,19 +37,19 @@ namespace DHGCDB.Views
       return db.KIIDSGivenTypes.ToDictionary(t => t.ID.ToString(), t => t.Name);
     }
 
-    private Dictionary<string, string> GetAttitudeToRiskList()
-    {
-      return db.AttitudeToRiskSelections.ToDictionary(t => t.ID.ToString(), t => t.Name);
-    }
-
     private Dictionary<string, string> GetFundSelectionList()
     {
       return db.FundSelections.ToDictionary(t => t.ID.ToString(), t => t.Name);
     }
 
-    private Dictionary<string,string> GetRiskChangedList()
+    private Dictionary<string, string> GetAttitudeToRiskList()
     {
-      return new Dictionary<string,string> { { "Up", "Up" }, { "Same", "Same" }, { "Down", "Down" } };
+      return db.AttitudeToRiskSelections.ToDictionary(t => t.ID.ToString(), t => t.Name);
+    }
+
+    private Dictionary<string, string> GetAttitudeToRiskCategoryList()
+    {
+      return db.AttitudeToRiskCategories.ToDictionary(t => t.ID.ToString(), t => t.Name);
     }
 
     private Dictionary<string,string> GetAboveOrBelowOutputList()
@@ -95,6 +95,18 @@ namespace DHGCDB.Views
       return View();
     }
 
+    private RedirectToRouteResult DoPersonReview(Review review, Person person)
+    {
+      // Need to figure out if they have any undefined ATRs or not
+      AttitudeToRiskCategory atrCategory;
+      if(person.MissingATR(out atrCategory)) {
+        return RedirectToAction("AddPersonMissingATR", "Review", new { ID = review.ID, subID = person.ID });
+      }
+      else {
+        return RedirectToAction("CreatePersonReview", "Review", new { ID = review.ID, subID = person.ID });
+      }
+    }
+
     // POST: Review/Create
     // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -132,8 +144,7 @@ namespace DHGCDB.Views
         }
         else {
           // No joint products - go straight to person review
-          var firstPersonID = client.Persons.First().ID;
-          return RedirectToAction("CreatePersonReview", "Review", new { ID = review.ID, subID = firstPersonID });
+          return DoPersonReview(review, client.Persons.First());
         }
       }
 
@@ -227,10 +238,6 @@ namespace DHGCDB.Views
       if(subid == null) {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
-      ViewBag.AttitudeToRiskList = GetAttitudeToRiskList();
-      ViewBag.FundSelectionList = GetFundSelectionList();
-      ViewBag.RiskChangedList = GetRiskChangedList();
-      ViewBag.AboveOrBelowOutputList = GetAboveOrBelowOutputList();
 
       Review review = db.Reviews.Find(id);
       if(review == null) {
@@ -243,7 +250,9 @@ namespace DHGCDB.Views
         return HttpNotFound();
       }
 
+      ViewBag.AboveOrBelowOutputList = GetAboveOrBelowOutputList();
       ViewBag.PersonName = person.ToString();
+      ViewBag.AllCurrentAttitudeToRisk = person.AllCurrentAttitudeToRisk;
 
       return View();
     }
@@ -255,16 +264,27 @@ namespace DHGCDB.Views
         if(existingPersonReviews.Any())
           continue;
         else
-          return RedirectToAction("CreatePersonReview", "Review", new { id = review.ID, subid = individual.ID });
+          return DoPersonReview(review, individual);
       }
 
       return RedirectToAction("Details", "Client", new { ID = client.ID });
     }
 
+    private RedirectToRouteResult IndividualProductValuationOrNextPerson(Review review, Client client, Person person)
+    {
+      if(person.PersonProducts.Any()) {
+        return RedirectToAction("IndividualProductValuation", new { ID = review.ID, subid = person.PersonProducts.First().ID });
+      }
+      else {
+        return NextPersonOrClientDetails(client, review);
+      }
+
+    }
+
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult CreatePersonReview(int? id, int? subid, [Bind(Include = "InvestmentAttitudeToRisk,InvestmentFundSelection,PensionAttitudeToRisk,PensionFundSelection,YearOfRiskScore,RiskChanged,AboveOrBelowOutput")] PersonReviewForView personReviewForView)
+    public ActionResult CreatePersonReview(int? id, int? subid, [Bind(Include = "IsATRChanging,AboveOrBelowOutput")] PersonReviewForView personReviewForView)
     {
       if(ModelState.IsValid) {
         if(id == null) {
@@ -293,11 +313,11 @@ namespace DHGCDB.Views
         db.PersonReviews.Add(personReview);
         db.SaveChanges();
 
-        if(person.PersonProducts.Any()) {
-          return RedirectToAction("IndividualProductValuation", new { ID = review.ID, subid = person.PersonProducts.First().ID });
+        if(personReview.IsATRChanging) {
+          return RedirectToAction("ChangePersonATR", new { ID = review.ID, subid = person.ID });
         }
         else {
-          return NextPersonOrClientDetails(client, review);
+          return IndividualProductValuationOrNextPerson(review, client, person);
         }
       }
 
@@ -319,8 +339,7 @@ namespace DHGCDB.Views
 
       var personReviewForView = new PersonReviewForView(personReview);
       personReviewForView.ReviewID = personReview.Review.ID;
-      personReviewForView.AttitudeToRiskList = new SelectList(GetAttitudeToRiskList(), "Key", "Value");
-      personReviewForView.RiskChangeSelection = new SelectList(GetRiskChangedList(), "Key", "Value");
+      personReviewForView.IsATRChanging = personReview.IsATRChanging;
       personReviewForView.AboveOrBelowOutputSelection = new SelectList(GetAboveOrBelowOutputList(), "Key", "Value");
 
       return View(personReviewForView);
@@ -331,7 +350,7 @@ namespace DHGCDB.Views
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult EditPersonReview(int? id, [Bind(Include = "ID,InvestmentAttitudeToRisk,InvestmentFundSelection,PensionAttitudeToRisk,PensionFundSelection,YearOfRiskScore,RiskChanged,AboveOrBelowOutput")] PersonReviewForView personReviewForView)
+    public ActionResult EditPersonReview(int? id, [Bind(Include = "ID,AboveOrBelowOutput,IsATRChanging")] PersonReviewForView personReviewForView)
     {
       if(id == null) {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -343,9 +362,8 @@ namespace DHGCDB.Views
       }
 
       if(ModelState.IsValid) {
-        personReview.ATRYear = personReviewForView.YearOfRiskScore;
-        personReview.ATRChanged = personReviewForView.RiskChanged;
         personReview.ATROutput = personReviewForView.AboveOrBelowOutput;
+        personReview.IsATRChanging = personReviewForView.IsATRChanging;
         db.SaveChanges();
 
         return RedirectToAction("Details", new { ID = personReview.Review.ID });
@@ -438,8 +456,7 @@ namespace DHGCDB.Views
           return RedirectToAction("JointProductValuation", new { ID = review.ID, subid = unvaluedProducts.First().ID });
         }
         else {
-          var firstPersonID = review.Client.Persons.First().ID;
-          return RedirectToAction("CreatePersonReview", "Review", new { ID = review.ID, subID = firstPersonID });
+          return DoPersonReview(review, review.Client.Persons.First());
         }
       }
 
@@ -539,6 +556,169 @@ namespace DHGCDB.Views
       }
 
       return View(productValuationForView);
+    }
+
+    // GET: Review/AddPersonMissingATR/5/20
+    public ActionResult AddPersonMissingATR(int? id, int? subid)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+      if(subid == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+
+      Review review = db.Reviews.Find(id);
+      if(review == null) {
+        return HttpNotFound("Review not found");
+      }
+
+      Person person = db.People.Find(subid);
+      if(person == null) {
+        return HttpNotFound("Person not found");
+      }
+      
+      AttitudeToRiskCategory atrCategory;
+      if(!person.MissingATR(out atrCategory)) {
+        return HttpNotFound("Missing ATR Category not found");
+      }
+
+      ViewBag.ATRType = atrCategory.ID;
+      ViewBag.ATRTypeDisplay = atrCategory.Name;
+      ViewBag.PersonName = person.ToString();
+      ViewBag.AttitudeToRiskList = GetAttitudeToRiskList();
+
+      return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult AddPersonMissingATR(int? id, int? subid, [Bind(Include = "AttitudeToRiskCategory,AttitudeToRisk")] PersonsAttitudeToRiskForView patrv)
+    {
+      if(ModelState.IsValid) {
+        if(id == null) {
+          return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+        if(subid == null) {
+          return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        Review review = db.Reviews.Find(id);
+        if(review == null) {
+          return HttpNotFound("Review not found");
+        }
+
+        Person person = db.People.Find(subid);
+        if(person == null) {
+          return HttpNotFound("Person not found");
+        }
+
+        var atrcat = db.AttitudeToRiskCategories.Find(patrv.AttitudeToRiskCategory);
+        if(atrcat == null) {
+          return HttpNotFound();
+        }
+
+        var atr = db.AttitudeToRiskSelections.Find(patrv.AttitudeToRisk);
+        if(atr == null) {
+          return HttpNotFound("Attitude To Risk not found");
+        }
+
+        var patr = new PersonsAttitudeToRisk {
+          Person = person,
+          FromDate = review.ReviewDate,
+          AttitudeToRisk = atr,
+          AttitudeToRiskCategory = atrcat,
+          AsPartOfReview = review
+        };
+
+        person.AttitudeToRiskHistory.Add(patr);
+        db.PeoplesAttitudeToRisks.Add(patr);
+
+        db.SaveChanges();
+
+        return DoPersonReview(review, person);
+      }
+
+      return View(patrv);
+    }
+
+
+    // GET: Review/ChangePersonATR/5/20
+    public ActionResult ChangePersonATR(int? id, int? subid)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+      if(subid == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+
+      Review review = db.Reviews.Find(id);
+      if(review == null) {
+        return HttpNotFound("Review not found");
+      }
+
+      Person person = db.People.Find(subid);
+      if(person == null) {
+        return HttpNotFound("Person not found");
+      }
+
+      ViewBag.PersonName = person.ToString();
+      ViewBag.AttitudeToRiskList = GetAttitudeToRiskList();
+      ViewBag.AttitudeToRiskCategoryList = GetAttitudeToRiskCategoryList();
+
+      return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult ChangePersonATR(int? id, int? subid, [Bind(Include = "AttitudeToRiskCategory,AttitudeToRisk")] PersonsAttitudeToRiskForView patrv)
+    {
+      if(ModelState.IsValid) {
+        if(id == null) {
+          return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+        if(subid == null) {
+          return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        Review review = db.Reviews.Find(id);
+        if(review == null) {
+          return HttpNotFound("Review not found");
+        }
+
+        Person person = db.People.Find(subid);
+        if(person == null) {
+          return HttpNotFound("Person not found");
+        }
+
+        var atrcat = db.AttitudeToRiskCategories.Find(patrv.AttitudeToRiskCategory);
+        if(atrcat == null) {
+          return HttpNotFound();
+        }
+
+        var atr = db.AttitudeToRiskSelections.Find(patrv.AttitudeToRisk);
+        if(atr == null) {
+          return HttpNotFound("Attitude To Risk not found");
+        }
+
+        var patr = new PersonsAttitudeToRisk {
+          Person = person,
+          FromDate = review.ReviewDate,
+          AttitudeToRisk = atr,
+          AttitudeToRiskCategory = atrcat,
+          AsPartOfReview = review
+        };
+
+        person.AttitudeToRiskHistory.Add(patr);
+        db.PeoplesAttitudeToRisks.Add(patr);
+
+        db.SaveChanges();
+
+        return IndividualProductValuationOrNextPerson(review, review.Client, person);
+      }
+
+      return View(patrv);
     }
 
 

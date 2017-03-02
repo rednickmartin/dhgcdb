@@ -20,6 +20,8 @@ namespace DHGCDB.Models
 
     public virtual AttitudeToRisk AttitudeToRisk { get; set; }
 
+    public virtual Review AsPartOfReview { get; set; }
+
     public override bool Equals(object obj)
     {
       var patr = obj as PersonsAttitudeToRisk;

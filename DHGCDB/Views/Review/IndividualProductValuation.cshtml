@@ -60,15 +60,21 @@
         <tr>
             <th>Date of valuation</th>
             <th>Valuation</th>
+            <th>Asset Mix at time of valuation</th>
         </tr>
 
         @foreach(var valuation in valuations) {
+          string assetMixName = valuation.AssetMix == null ? "" : valuation.AssetMix.Name;
+
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => valuation.Date)
+                @Html.DisplayFor(model => valuation.Date)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => valuation.Value)
+                @Html.DisplayFor(model => valuation.Value)
+            </td>
+            <td>
+                @Html.DisplayFor(model => assetMixName )
             </td>
         </tr>
         }

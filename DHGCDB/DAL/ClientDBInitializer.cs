@@ -127,12 +127,12 @@ namespace DHGCDB.DAL
       });
 
 
-      var businessTypeCIA = new BusinessType { Name = "CIA", HasAssetMix = true };
-      var businessTypePension = new BusinessType { Name = "Pension", HasAssetMix = true };
-      var businessTypeISA = new BusinessType { Name = "ISA", HasAssetMix = true };
-      var businessTypeBond = new BusinessType { Name = "Bond", HasAssetMix = true };
-      var businessTypeWPBond = new BusinessType { Name = "Bond", HasAssetMix = false };
-      var businessTypeGIA = new BusinessType { Name = "GIA", HasAssetMix = true };
+      var businessTypeCIA = new BusinessType { Name = "CIA", HasAssetMix = true, ATRCategory = atrCatInvestment };
+      var businessTypePension = new BusinessType { Name = "Pension", HasAssetMix = true, ATRCategory = atrCatPension };
+      var businessTypeISA = new BusinessType { Name = "ISA", HasAssetMix = true, ATRCategory = atrCatInvestment };
+      var businessTypeBond = new BusinessType { Name = "Bond", HasAssetMix = true, ATRCategory = atrCatInvestment };
+      var businessTypeWPBond = new BusinessType { Name = "W/P Bond", HasAssetMix = false, ATRCategory = atrCatInvestment };
+      var businessTypeGIA = new BusinessType { Name = "GIA", HasAssetMix = true, ATRCategory = atrCatInvestment };
 
 
       context.BusinessTypes.Add(businessTypeISA);
@@ -417,32 +417,28 @@ namespace DHGCDB.DAL
       PersonReview person1review1 = new PersonReview {
         Person = person1,
         Review = review1,
-        ATRYear = 2015,
-        ATRChanged = "Same",
+        IsATRChanging = false,
         ATROutput = "Above"         
       };
 
       PersonReview person1review2 = new PersonReview {
         Person = person1,
         Review = review2,
-        ATRYear = 2016,
-        ATRChanged = "Up",
+        IsATRChanging = false,
         ATROutput = "Below"
       };
 
       PersonReview person2review1 = new PersonReview {
         Person = person1,
         Review = review1,
-        ATRYear = 2015,
-        ATRChanged = "Same",
+        IsATRChanging = false,
         ATROutput = "Above"
       };
 
       PersonReview person2review2 = new PersonReview {
         Person = person1,
         Review = review2,
-        ATRYear = 2016,
-        ATRChanged = "Up",
+        IsATRChanging = false,
         ATROutput = "Below"
       };
 

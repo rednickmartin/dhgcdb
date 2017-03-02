@@ -12,5 +12,7 @@ namespace DHGCDB.Models
     public string Name { get; set; }
 
     public bool HasAssetMix { get; set; }
+
+    public virtual AttitudeToRiskCategory ATRCategory { get; set; }
   }
 }

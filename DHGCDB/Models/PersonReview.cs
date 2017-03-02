@@ -13,10 +13,10 @@ namespace DHGCDB.Models
 
     public virtual Review Review { get; set; }
 
-    public int ATRYear { get; set; }
-
-    public string ATRChanged { get; set; }
-
     public string ATROutput { get; set; }
+
+    public bool IsATRChanging { get; set; }
+
+    public virtual PersonsAttitudeToRisk AttitudeToRisk { get; set; }
   }
 }

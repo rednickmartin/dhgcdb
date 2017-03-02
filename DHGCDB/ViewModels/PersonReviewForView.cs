@@ -16,9 +16,8 @@ namespace DHGCDB.ViewModels
     public PersonReviewForView(PersonReview personReview)
     {
       ID = personReview.ID;
-      YearOfRiskScore = personReview.ATRYear;
-      RiskChanged = personReview.ATRChanged;
       AboveOrBelowOutput = personReview.ATROutput;
+      IsATRChanging = personReview.IsATRChanging;
     }
 
     public PersonReview PersonReview {
@@ -26,9 +25,8 @@ namespace DHGCDB.ViewModels
       {
         return new PersonReview {
           ID = ID,
-          ATRYear = YearOfRiskScore,
-          ATRChanged = RiskChanged,
-          ATROutput = AboveOrBelowOutput
+          ATROutput = AboveOrBelowOutput,
+          IsATRChanging = IsATRChanging
         };
       }
     }
@@ -39,17 +37,12 @@ namespace DHGCDB.ViewModels
 
     public string PersonName { get; set; }
 
-    [Display(Name = "Year of Risk Score")]
-    public int YearOfRiskScore { get; set; }
-
-    [Display(Name = "How has Risk Changed?")]
-    public string RiskChanged { get; set; }
-
     [Display(Name = "Above or below output?")]
     public string AboveOrBelowOutput { get; set; }
 
-    public SelectList AttitudeToRiskList { get; set; }
-    public SelectList RiskChangeSelection { get; set; }
+    [Display(Name = "Is Attitude To Risk Changing?")]
+    public bool IsATRChanging { get; set; }
+
     public SelectList AboveOrBelowOutputSelection { get; set; }
 
   }
