@@ -370,6 +370,7 @@
     <Content Include="Views\Review\ChangePersonATR.cshtml" />
     <Content Include="Views\FundSelection\AddFund.cshtml" />
     <Content Include="Views\FundSelection\DeleteFund.cshtml" />
+    <Content Include="Views\FundSelection\Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

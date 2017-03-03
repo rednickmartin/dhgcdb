@@ -309,6 +309,60 @@ namespace DHGCDB.Models
       return View(fundForView);
     }
 
+    // GET: FundSelections/Copy/2
+    public ActionResult Copy()
+    {
+      return View();
+    }
+
+    // POST: FundSelections/Copy/2
+    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+    // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult Copy(int? id, [Bind(Include = "Name,Description,DateCreated")] FundSelection fundSelection)
+    {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+      FundSelection oldFundSelection = db.FundSelections.Find(id);
+      if(oldFundSelection == null) {
+        return HttpNotFound("Fund Selection Not Found");
+      }
+
+      if(ModelState.IsValid) {
+        db.FundSelections.Add(fundSelection);
+
+        foreach(var fund in oldFundSelection.Funds) {
+          var newFund = new Fund {
+            Name = fund.Name,
+            Description = fund.Description,
+            FundSelection = fundSelection,
+            Sector = fund.Sector
+          };
+
+          foreach(var allocation in fund.Allocations) {
+            var newAtrAllocation = new FundATRAllocation {
+              Fund = newFund,
+              AttitudeToRisk = allocation.AttitudeToRisk,
+              Percentage = allocation.Percentage
+            };
+            newFund.Allocations.Add(newAtrAllocation);
+            db.FundATRAllocations.Add(newAtrAllocation);
+          }
+
+          db.Funds.Add(newFund);
+        }
+
+        db.SaveChanges();
+        return RedirectToAction("Details", new { ID = fundSelection.ID });
+      }
+
+      return View(fundSelection);
+    }
+
+
+
 
     protected override void Dispose(bool disposing)
     {
