@@ -34,7 +34,8 @@ namespace DHGCDB.Controllers
       var outputDir = System.Configuration.ConfigurationManager.AppSettings["DHGCDBOutputDirectory"];
 
       var source = String.Format(@"{0}\template.docx", templateDir);
-      var dest = String.Format(@"{0}\report_{1}.docx", outputDir, review.ID);
+      var docName = String.Format(@"report_{0}.docx", review.ID);
+      var dest = String.Format(@"{0}\{1}", outputDir, docName);
 
       var replacements = new Dictionary<string, string>();
       var psi_replacements = new Dictionary<string, string>();
@@ -104,7 +105,7 @@ namespace DHGCDB.Controllers
 
       doc.Close();
 
-      return dest;
+      return docName;
     }
   }
 }

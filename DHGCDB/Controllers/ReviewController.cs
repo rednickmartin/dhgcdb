@@ -733,7 +733,7 @@ namespace DHGCDB.Views
       }
 
       var location = Controllers.ReportCreater.Create(review);
-      return Redirect(String.Format(@"file://{0}", location));
+      return Redirect(String.Format(@"~/Output/{0}", location));
     }
 
 
