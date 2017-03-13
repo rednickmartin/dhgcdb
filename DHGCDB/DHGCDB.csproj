@@ -350,7 +350,6 @@
     <Content Include="Views\FundSelection\Index.cshtml" />
     <Content Include="Views\FundSelection\FundDetails.cshtml" />
     <Content Include="Views\FundSelection\EditFund.cshtml" />
-    <Content Include="Templates\query_mappings.dat" />
     <Content Include="Templates\template.docx" />
     <Content Include="Views\Client\AddPersonAttitudeToRisk.cshtml" />
     <Content Include="Views\Client\EditJointProduct.cshtml" />
