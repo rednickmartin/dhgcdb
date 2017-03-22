@@ -5,12 +5,14 @@ using System.Web;
 
 namespace DHGCDB.Models
 {
-  public class ReviewType
+  public class ReviewFrequency
   {
     public int ID { get; set; }
 
     public string Name { get; set; }
 
-    public bool NewBusiness { get; set; }
+    public string ReportText { get; set; }
+
+    public int NumberOfYears { get; set; }
   }
 }

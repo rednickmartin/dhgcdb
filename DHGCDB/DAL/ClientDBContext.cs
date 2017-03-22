@@ -30,7 +30,7 @@ namespace DHGCDB.DAL
     public DbSet<Product> Products { get; set; }
     public DbSet<ProductFee> ProductFees { get; set; }
     public DbSet<ProductValuation> ProductValuations { get; set; }
-
+    public DbSet<ReviewFrequency> ReviewFrequencies { get; set; }
 
     // Still to do:
     // Business Type Choice

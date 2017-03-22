@@ -87,12 +87,28 @@ namespace DHGCDB.Views
     }
 
     // GET: Review/CreateS
-    public ActionResult Create()
+    public ActionResult Create(int? id)
     {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+      Client client = db.Clients.Find(id);
+      if(client == null) {
+        return HttpNotFound("Client not found");
+      }
+
       ViewBag.HowConductedList = GetHowConductedList();
       ViewBag.ReviewTypeList = GetReviewTypeList();
       ViewBag.KIIDsGivenList = GetKIIDsGivenList();
-      return View();
+      ViewBag.NextReviewDate = DateTime.Now.AddYears(client.ReviewFrequency.NumberOfYears);
+
+      var reviewForView = new ReviewForView {
+        ReviewDate = DateTime.Now,
+        ValuationDate = DateTime.Now,
+        NextReviewDate = DateTime.Now.AddYears(client.ReviewFrequency.NumberOfYears)
+      };
+
+      return View(reviewForView);
     }
 
     private RedirectToRouteResult DoPersonReview(Review review, Person person)
@@ -112,7 +128,7 @@ namespace DHGCDB.Views
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Create(int? id, [Bind(Include = "ID,Name,ReviewDate,ValuationDate,IsJoint,PortfolioSize,AnnualCharges,NumberOfFunds,HowConducted,ReviewType,KIIDsGiven")] ReviewForView reviewForView)
+    public ActionResult Create(int? id, [Bind(Include = "ID,Name,ReviewDate,ValuationDate,NextReviewDate,IsJoint,PortfolioSize,AnnualCharges,NumberOfFunds,HowConducted,ReviewType,KIIDsGiven")] ReviewForView reviewForView)
     {
       if(id == null) {
         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

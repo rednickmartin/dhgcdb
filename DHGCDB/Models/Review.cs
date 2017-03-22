@@ -34,5 +34,9 @@ namespace DHGCDB.Models
     public int NumberOfFunds { get; set; }
 
     public virtual ReviewType ReviewType { get; set; }
+
+    [DataType(DataType.Date)]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+    public DateTime NextReviewDate { get; set; }
   }
 }

@@ -31,6 +31,11 @@ namespace DHGCDB.Controllers
       return db.BusinessTypes.ToDictionary(t => t.ID.ToString(), t => t.Name);
     }
 
+    private Dictionary<string, string> GetReviewFrequencyList()
+    {
+      return db.ReviewFrequencies.ToDictionary(t => t.ID.ToString(), t => t.Name);
+    }
+
     // GET: Client
     public ActionResult Index()
     {
@@ -54,6 +59,8 @@ namespace DHGCDB.Controllers
     // GET: Client/Create
     public ActionResult Create()
     {
+      ViewBag.ReviewFrequencyList = GetReviewFrequencyList();
+
       return View();
     }
 
@@ -62,16 +69,22 @@ namespace DHGCDB.Controllers
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Create([Bind(Include = "ClientName,FirstLine,SecondLine,Town,County,PostCode")] ClientAddress clientAddress)
+    public ActionResult Create([Bind(Include = "ClientName,FirstLine,SecondLine,Town,County,PostCode,ReviewFrequency")] ClientForView clientForView)
     {
       if(ModelState.IsValid) {
-        Client clientToAdd = new Client { Name = clientAddress.ClientName };
+
+        var reviewFrequency = db.ReviewFrequencies.Find(clientForView.ReviewFrequency);
+        if(reviewFrequency == null) {
+          return HttpNotFound("Could not find review frequency");
+        }
+
+        Client clientToAdd = new Client { Name = clientForView.ClientName, ReviewFrequency = reviewFrequency };
         Address addressToAdd = new Address {
-          FirstLine = clientAddress.FirstLine,
-          SecondLine = clientAddress.SecondLine,
-          Town = clientAddress.Town,
-          County = clientAddress.County,
-          PostCode = clientAddress.PostCode
+          FirstLine = clientForView.FirstLine,
+          SecondLine = clientForView.SecondLine,
+          Town = clientForView.Town,
+          County = clientForView.County,
+          PostCode = clientForView.PostCode
         };
 
         clientToAdd.Address = addressToAdd;
@@ -82,7 +95,7 @@ namespace DHGCDB.Controllers
         return RedirectToAction("Details", new { ID = clientToAdd.ID });
       }
 
-      return View(clientAddress);
+      return View(clientForView);
     }
 
     // GET: Client/Create
@@ -127,14 +140,16 @@ namespace DHGCDB.Controllers
         return HttpNotFound();
       }
 
-      ClientAddress clientAddress = new ClientAddress {
+      ClientForView clientAddress = new ClientForView {
         ClientName = client.Name,
         FirstLine = client.Address.FirstLine,
         SecondLine = client.Address.SecondLine,
         Town = client.Address.Town,
         County = client.Address.County,
-        PostCode = client.Address.PostCode
+        PostCode = client.Address.PostCode,
+        ReviewFrequency = client.ReviewFrequency.ID
       };
+      ViewBag.ReviewFrequencyList = GetReviewFrequencyList();
       return View(clientAddress);
     }
 
@@ -143,7 +158,7 @@ namespace DHGCDB.Controllers
     // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit(int? id, [Bind(Include = "ClientName,FirstLine,SecondLine,Town,County,PostCode")] ClientAddress clientAddress)
+    public ActionResult Edit(int? id, [Bind(Include = "ClientName,FirstLine,SecondLine,Town,County,PostCode")] ClientForView clientAddress)
     {
       if(ModelState.IsValid) {
         Client client = db.Clients.Find(id);

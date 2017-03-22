@@ -54,10 +54,17 @@ namespace DHGCDB.ViewModels
 
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+    [Display(Name = "Review Date")]
     public DateTime ReviewDate { get; set; }
 
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+    [Display(Name = "Next Review Date")]
+    public DateTime NextReviewDate { get; set; }
+
+    [DataType(DataType.Date)]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+    [Display(Name = "Valuation Date")]
     public DateTime ValuationDate { get; set; }
 
     public bool IsJoint { get; set; }

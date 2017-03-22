@@ -85,19 +85,22 @@ namespace DHGCDB.Migrations
       context.BusinessTypes.AddOrUpdate(x => x.Name, businessTypeGIA);
 
 
-      var revTypeExistingCustomerReview = new ReviewType { Name = "Existing customer - Review" };
-      var revTypeExistingCustomerNewBusiness = new ReviewType { Name = "Existing customer - New Business" };
-      var revTypeExistingCustomerBoth = new ReviewType { Name = "Existing customer - Both" };
-      var revTypeNewCustomer = new ReviewType { Name = "New customer" };
+      var revTypeExistingCustomerReview = new ReviewType { Name = "Existing customer - Review", NewBusiness = false };
+      var revTypeExistingCustomerNewBusiness = new ReviewType { Name = "Existing customer - New Business", NewBusiness = true };
+      var revTypeExistingCustomerBoth = new ReviewType { Name = "Existing customer - Both", NewBusiness = true };
+      var revTypeNewCustomer = new ReviewType { Name = "New customer", NewBusiness = true };
 
       context.ReviewTypes.AddOrUpdate(x => x.Name, revTypeExistingCustomerReview);
       context.ReviewTypes.AddOrUpdate(x => x.Name, revTypeExistingCustomerNewBusiness);
       context.ReviewTypes.AddOrUpdate(x => x.Name, revTypeExistingCustomerBoth);
       context.ReviewTypes.AddOrUpdate(x => x.Name, revTypeNewCustomer);
 
-      var KIIDSGivenGiven = new KIIDSGiven { Name = "Given" };
-      var KIIDSGivenSent = new KIIDSGiven { Name = "Sent" };
-      var KIIDSGivenBeingSent = new KIIDSGiven { Name = "Being sent" };
+      var reviewFrequencyAnnual = new ReviewFrequency { Name = "Annual", ReportText = "an annual", NumberOfYears = 1 };
+      context.ReviewFrequencies.AddOrUpdate(x => x.Name, reviewFrequencyAnnual);
+
+      var KIIDSGivenGiven = new KIIDSGiven { Name = "Given", ReportText = "have been provided to you at our meeting" };
+      var KIIDSGivenSent = new KIIDSGiven { Name = "Sent", ReportText = "have been sent" };
+      var KIIDSGivenBeingSent = new KIIDSGiven { Name = "Being sent", ReportText = "are being sent" };
 
       context.KIIDSGivenTypes.AddOrUpdate(x => x.Name, KIIDSGivenGiven);
       context.KIIDSGivenTypes.AddOrUpdate(x => x.Name, KIIDSGivenSent);
@@ -202,7 +205,7 @@ namespace DHGCDB.Migrations
         var person2 = new Person { Title = "Mrs", FirstName = "Natalie", Surname = "Martin", Gender = "F", BirthDate = DateTime.Parse("1983-12-17") };
         //var person3 = new Person { Title = "Mr", FirstName = "Dermot", Surname = "Griffin", Gender = "M", BirthDate = DateTime.Parse("1960-03-01") };
 
-        var client1 = new Client { Name = "TESTCLIENT" };
+        var client1 = new Client { Name = "TESTCLIENT", ReviewFrequency = reviewFrequencyAnnual };
         client1.Persons.Add(person1);
         client1.Persons.Add(person2);
 
@@ -312,9 +315,9 @@ namespace DHGCDB.Migrations
         context.ProductValuations.Add(person2BondValuation);
         person2.PersonProducts.Add(person2Bond);
 
-        var conductedAtHome = new ReviewtHowConducted { Name = "Home" };
-        var conductedAtWork = new ReviewtHowConducted { Name = "Work" };
-        var conductedByTelephone = new ReviewtHowConducted { Name = "Telephone" };
+        var conductedAtHome = new ReviewtHowConducted { Name = "Home", ReportText = "see you again at our recent meeting" };
+        var conductedAtWork = new ReviewtHowConducted { Name = "Work", ReportText = "see you again at our recent meeting" };
+        var conductedByTelephone = new ReviewtHowConducted { Name = "Telephone", ReportText = "talk to you again recently" };
 
         context.ReviewHowConducted.Add(conductedAtHome);
         context.ReviewHowConducted.Add(conductedAtWork);
@@ -331,7 +334,8 @@ namespace DHGCDB.Migrations
           AnnualCharges = 100,
           KIIDSGiven = KIIDSGivenBeingSent,
           NumberOfFunds = 20,
-          ReviewType = revTypeNewCustomer
+          ReviewType = revTypeExistingCustomerReview,
+          NextReviewDate = DateTime.Parse("2013-07-31"),
         };
 
         var review2 = new Review {
@@ -345,7 +349,8 @@ namespace DHGCDB.Migrations
           AnnualCharges = 100,
           KIIDSGiven = KIIDSGivenGiven,
           NumberOfFunds = 23,
-          ReviewType = revTypeExistingCustomerReview
+          ReviewType = revTypeExistingCustomerReview,
+          NextReviewDate = DateTime.Parse("2015-07-30"),
         };
 
         jointInvestmentClient1Valuation2.AsPartOfReview = review1;

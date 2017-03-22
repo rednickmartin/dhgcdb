@@ -217,6 +217,14 @@
     <Compile Include="Migrations\201703090909354_InitialCreate.Designer.cs">
       <DependentUpon>201703090909354_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703160859213_nextreviewinfo.cs" />
+    <Compile Include="Migrations\201703160859213_nextreviewinfo.Designer.cs">
+      <DependentUpon>201703160859213_nextreviewinfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703220952107_kiidstext.cs" />
+    <Compile Include="Migrations\201703220952107_kiidstext.Designer.cs">
+      <DependentUpon>201703220952107_kiidstext.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -241,13 +249,14 @@
     <Compile Include="Models\ProductValuation.cs" />
     <Compile Include="Models\ReviewHowConducted.cs" />
     <Compile Include="Models\Review.cs" />
+    <Compile Include="Models\ReviewFrequency.cs" />
     <Compile Include="Models\ReviewType.cs" />
     <Compile Include="Models\Sector.cs" />
     <Compile Include="Models\SectorGrouping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Templates\QueryMappings.cs" />
-    <Compile Include="ViewModels\ClientAddress.cs" />
+    <Compile Include="ViewModels\ClientForView.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
     <Compile Include="ViewModels\FundForView.cs" />
     <Compile Include="ViewModels\PersonsAttitudeToRiskForView.cs" />
@@ -386,6 +395,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703090909354_InitialCreate.resx">
       <DependentUpon>201703090909354_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703160859213_nextreviewinfo.resx">
+      <DependentUpon>201703160859213_nextreviewinfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703220952107_kiidstext.resx">
+      <DependentUpon>201703220952107_kiidstext.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

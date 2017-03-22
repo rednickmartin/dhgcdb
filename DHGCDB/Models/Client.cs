@@ -35,5 +35,7 @@ namespace DHGCDB.Models
         return Products.Where(x => x.Person == null);
       }
     }
+
+    public virtual ReviewFrequency ReviewFrequency { get; set; }
   }
 }
